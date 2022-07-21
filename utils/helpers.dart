@@ -15,21 +15,18 @@ getWidth(context, percentage) {
 }
 
 launchURL(url) async {
-  if (await canLaunch(url)) {
-    await launch(url);
-  } else {
-    if (kDebugMode) {
-      print('Could not launch $url');
-    }
+  Uri uri = Uri.parse(url);
+  if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
+    dd('Could not launch $uri');
   }
 }
 
-showToast(String message) {
+showToast(String message, [ToastGravity gravity: ToastGravity.BOTTOM]) {
   if (message != '') {
     Fluttertoast.showToast(
       msg: message,
       toastLength: Toast.LENGTH_LONG,
-      gravity: ToastGravity.BOTTOM,
+      gravity: gravity,
       timeInSecForIosWeb: 2,
       backgroundColor: Colors.grey.shade800,
       textColor: Colors.white,
@@ -60,4 +57,10 @@ showSnackBar(String message, [int duration = 5, callback]) {
   );
 
   ScaffoldMessenger.of(Get.context!).showSnackBar(snackBar);
+}
+
+dd(object) {
+  if (kDebugMode) {
+    print(object);
+  }
 }
