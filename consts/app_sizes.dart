@@ -15,6 +15,10 @@ class AppSizes {
   static final size18 = 2.3 * screenSize / 100;
   static final size20 = 2.5 * screenSize / 100;
   static final size22 = 2.8 * screenSize / 100;
+  static final size24 = 3.1 * screenSize / 100;
+  static final size26 = 3.4 * screenSize / 100;
+  static final size28 = 3.7 * screenSize / 100;
+  static final size30 = 4.0 * screenSize / 100;
 
   static newSize(percentage) {
     return percentage * screenSize / 100;
