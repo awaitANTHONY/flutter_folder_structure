@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -18,13 +17,6 @@ class SettingController extends GetxController {
   var isDontShow = false.obs;
   RxBool notification = true.obs;
   RxInt sliderIndex = 0.obs;
-
-  @override
-  void onInit() {
-    super.onInit();
-
-    getAppStatus();
-  }
 
   void store(Setting setting) async {
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
@@ -76,29 +68,9 @@ class SettingController extends GetxController {
     return false;
   }
 
-  getAppStatus() {
-    var box = GetStorage();
-
-    var _status2 = box.read('notification') ?? true;
-    notification.value = _status2;
-
-    Future.delayed(const Duration(seconds: 2), () async {
-      if (_status2) {
-        await FirebaseMessaging.instance.subscribeToTopic('veva_live_football');
-      }
-    });
-  }
-
   changeNotificationStatus() async {
     var box = GetStorage();
     box.write('notification', !notification.value);
     notification.value = !notification.value;
-
-    if (notification.value) {
-      await FirebaseMessaging.instance.subscribeToTopic('veva_live_football');
-    } else {
-      await FirebaseMessaging.instance
-          .unsubscribeFromTopic('veva_live_football');
-    }
   }
 }

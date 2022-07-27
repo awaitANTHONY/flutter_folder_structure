@@ -1,9 +1,7 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import '/services/google_auth_service.dart';
 import '/services/api_services.dart';
 import '/services/vpn_service.dart';
 import '/utils/helpers.dart';
@@ -29,7 +27,6 @@ class AuthController extends GetxController {
     var vpnResult = await CheckVpnConnection.isVpnActive();
     if (connectivityResult != ConnectivityResult.none && !vpnResult) {
       try {
-        data['device_token'] = await FirebaseMessaging.instance.getToken();
         var response = await ApiService.signup(data);
 
         if (response.status == true) {
@@ -70,7 +67,6 @@ class AuthController extends GetxController {
     var vpnResult = await CheckVpnConnection.isVpnActive();
     if (connectivityResult != ConnectivityResult.none && !vpnResult) {
       try {
-        data['device_token'] = await FirebaseMessaging.instance.getToken();
         var response = await ApiService.signin(data);
 
         if (response.status == true) {
@@ -158,7 +154,6 @@ class AuthController extends GetxController {
   logout() {
     storeToken('');
     accessToken.value = '';
-    GoogleAuthService().logout();
     isLogin.value = false;
     user.value = User();
     Get.offAll(() => const ParentScreen());

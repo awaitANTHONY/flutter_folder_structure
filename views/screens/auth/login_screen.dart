@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '/consts/consts.dart';
 import '/controllers/auth_controller.dart';
-import '/services/google_auth_service.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -65,9 +64,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   Stack(
                     children: [
                       InkWell(
-                        onTap: () {
-                          GoogleAuthService().login();
-                        },
+                        onTap: () {},
                         child: Obx(() {
                           return Container(
                             width: MediaQuery.of(context).size.width,

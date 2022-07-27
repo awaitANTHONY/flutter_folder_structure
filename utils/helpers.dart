@@ -21,7 +21,7 @@ launchURL(url) async {
   }
 }
 
-showToast(String message, [ToastGravity gravity: ToastGravity.BOTTOM]) {
+showToast(String message, [ToastGravity gravity = ToastGravity.BOTTOM]) {
   if (message != '') {
     Fluttertoast.showToast(
       msg: message,

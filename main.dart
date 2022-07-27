@@ -1,6 +1,4 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 
 import 'package:flutter/material.dart';
@@ -17,26 +15,9 @@ import '/services/vpn_service.dart';
 import '/utils/helpers.dart';
 import '/views/screens/splash_screen.dart';
 
-Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  await Firebase.initializeApp();
-  if (kDebugMode) {
-    print('Handling a background message ${message.messageId}');
-  }
-}
-
 main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await GetStorage.init();
-  await Firebase.initializeApp();
-  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-  if (!kIsWeb) {
-    await FirebaseMessaging.instance
-        .setForegroundNotificationPresentationOptions(
-      alert: true,
-      badge: true,
-      sound: true,
-    );
-  }
 
   runApp(
     GetMaterialApp(
@@ -88,45 +69,45 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    initNotification();
+    //initNotification();
 
     Future.delayed(2.seconds, () {
       loadData();
     });
   }
 
-  void initNotification() async {
-    if (kDebugMode) {
-      print('initNotification');
-      //print(await FirebaseMessaging.instance.getToken());
-    }
+  // void initNotification() async {
+  //   if (kDebugMode) {
+  //     print('initNotification');
+  //     //print(await FirebaseMessaging.instance.getToken());
+  //   }
 
-    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      var data = message.data;
+  //   FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+  //     var data = message.data;
 
-      if (data['type'] == 'content') {
-        arguments = {
-          'title': data['title'],
-          'id': data['id'],
-          'coverImage': data['image'],
-          'content_type': data['content_type'],
-        };
-        hasNotification = true;
-      }
+  //     if (data['type'] == 'content') {
+  //       arguments = {
+  //         'title': data['title'],
+  //         'id': data['id'],
+  //         'coverImage': data['image'],
+  //         'content_type': data['content_type'],
+  //       };
+  //       hasNotification = true;
+  //     }
 
-      if (data['type'] == 'url') {
-        launchURL(data['action_url']);
-      }
+  //     if (data['type'] == 'url') {
+  //       launchURL(data['action_url']);
+  //     }
 
-      if (data['type'] == 'inApp') {}
-    });
+  //     if (data['type'] == 'inApp') {}
+  //   });
 
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      if (kDebugMode) {
-        print(message.notification?.title);
-      }
-    });
-  }
+  //   FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+  //     if (kDebugMode) {
+  //       print(message.notification?.title);
+  //     }
+  //   });
+  // }
 
   loadData() async {
     var connectivityResult = await (Connectivity().checkConnectivity());
