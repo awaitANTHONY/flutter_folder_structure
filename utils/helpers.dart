@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:get_storage/get_storage.dart';
 
 getHeight(context, percentage) {
   double height = MediaQuery.of(context).size.height;
@@ -57,6 +58,16 @@ showSnackBar(String message, [int duration = 5, callback]) {
   );
 
   ScaffoldMessenger.of(Get.context!).showSnackBar(snackBar);
+}
+
+readStorage(key) {
+  var box = GetStorage();
+  return box.read(key);
+}
+
+writeStorage(key, value) {
+  var box = GetStorage();
+  box.write(key, value);
 }
 
 dd(object) {
