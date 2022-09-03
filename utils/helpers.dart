@@ -36,7 +36,7 @@ showToast(String message, [ToastGravity gravity = ToastGravity.BOTTOM]) {
   }
 }
 
-showSnackBar(String message, [int duration = 5, callback]) {
+showSnackBar(String message, [callback, int duration = 5]) {
   if (!kDebugMode && message == 'Server error! Please try again.') {
     return;
   }
