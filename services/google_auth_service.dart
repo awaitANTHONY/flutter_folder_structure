@@ -1,51 +1,43 @@
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:get/get.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import '/controllers/auth_controller.dart';
-import '/views/screens/parent_screen.dart';
+// import '/controllers/auth_controller.dart';
+// import '/utils/helpers.dart';
+// import 'package:get/get.dart';
+// import 'package:google_sign_in/google_sign_in.dart';
 
-class GoogleAuthService {
-  AuthController authController = Get.find();
+// class GoogleAuthService {
+//   AuthController authController = Get.find();
 
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-  final GoogleSignIn googleSignIn = GoogleSignIn();
+//   GoogleSignIn googleSignIn = GoogleSignIn(
+//     scopes: <String>[
+//       'email',
+//     ],
+//   );
 
-  login() async {
-    authController.isLoading.value = true;
-    try {
-      final GoogleSignInAccount? googleSignInAccount =
-          await googleSignIn.signIn();
-      final GoogleSignInAuthentication googleSignInAuthentication =
-          await googleSignInAccount!.authentication;
-      final AuthCredential credential = GoogleAuthProvider.credential(
-        accessToken: googleSignInAuthentication.accessToken,
-        idToken: googleSignInAuthentication.idToken,
-      );
-      final authResult = await _auth.signInWithCredential(credential);
+//   signIn() async {
+//     authController.isLoading.value = true;
+//     try {
+//       final GoogleSignInAccount? googleSignInAccount =
+//           await googleSignIn.signIn();
 
-      final User? user = authResult.user;
+//       if (googleSignInAccount != null) {
+//         Map data = {
+//           'name': googleSignInAccount.displayName,
+//           'email': googleSignInAccount.email,
+//           'password': googleSignInAccount.id,
+//           'password_confirmation': googleSignInAccount.id,
+//           'provider': 'google',
+//         };
 
-      if (user != null) {
-        final Map<String, dynamic> data = <String, dynamic>{};
-        data['name'] = user.displayName;
-        data['email'] = user.email;
-        data['password'] = user.uid;
-        data['password_confirmation'] = user.uid;
-        data['prodiver'] = 'google';
+//         authController.signUp(data);
+//       } else {
+//         authController.isLoading.value = false;
+//       }
+//     } catch (e) {
+//       authController.isLoading.value = false;
+//       dd(e);
+//     }
+//   }
 
-        authController.signup(data);
-      }
-
-      return;
-    } catch (e) {
-      authController.isLoading.value = false;
-
-      //print(e);
-      //throw (e);
-    }
-  }
-
-  Future<void> logout() async {
-    await googleSignIn.signOut();
-  }
-}
+//   Future<void> signOut() async {
+//     await googleSignIn.signOut();
+//   }
+// }

@@ -9,7 +9,7 @@ import '/consts/consts.dart';
 
 class ApiService {
   static var client = http.Client();
-  static AuthController authController = Get.find();
+  //static AuthController authController = Get.find();
 
   static Future<Setting> loadSettings() async {
     Uri uri = Uri.parse(AppConsts.baseUrl + AppConsts.settings);
@@ -91,7 +91,7 @@ class ApiService {
       uri,
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
-        'Authorization': 'Bearer ' + authController.accessToken.value,
+        //'Authorization': 'Bearer ' + authController.accessToken.value,
       },
       body: body,
     );

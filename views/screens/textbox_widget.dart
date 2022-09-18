@@ -8,54 +8,60 @@ class TextboxWidget extends StatelessWidget {
     required this.controller,
     this.keyboardType = TextInputType.name,
     this.isPassword = false,
-    this.hintText,
+    this.hintText = '',
+    this.lableText = '',
   }) : super(key: key);
 
   final String title;
   final TextEditingController controller;
   final bool isPassword;
   final TextInputType keyboardType;
-  final String? hintText;
+  final String lableText;
+  final String hintText;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.symmetric(vertical: 10),
+      margin: const EdgeInsets.only(bottom: 10),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Text(
-            title,
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: AppSizes.size15,
-              color: AppColors.text,
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 5).copyWith(
+              top: 5,
+            ),
+            child: Text(
+              title,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: AppSizes.size16,
+                color: AppColors.text2,
+              ),
             ),
           ),
-          const SizedBox(
-            height: 10,
-          ),
           Container(
+            margin: EdgeInsets.symmetric(horizontal: 5),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(5),
-              color: Colors.grey.shade300,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.2),
+                  blurRadius: 4,
+                  offset: const Offset(0, 0),
+                ),
+              ],
             ),
             child: TextFormField(
               controller: controller,
               obscureText: isPassword,
               keyboardType: keyboardType,
-              decoration: InputDecoration(
-                contentPadding: const EdgeInsets.symmetric(horizontal: 10),
-                border: InputBorder.none,
-                hintText: hintText,
-                hintStyle: TextStyle(
-                  color: Colors.grey.shade600,
-                  fontSize: AppSizes.size14,
-                ),
-
-                // fillColor: Colors.grey.shade300,
-                // filled: true,
+              style: TextStyle(
+                color: AppColors.text,
+                fontWeight: FontWeight.bold,
+                fontSize: AppSizes.size14,
               ),
+              decoration: AppStyles.textInputDecoration(lableText, hintText),
+              cursorColor: AppColors.primaryColor,
               validator: (value) {
                 if (value == null || value.isEmpty) {
                   return hintText;

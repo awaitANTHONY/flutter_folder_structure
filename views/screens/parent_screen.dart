@@ -20,26 +20,13 @@ class ParentScreen extends StatefulWidget {
 
 class ParentScreenState extends State<ParentScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  AuthController authController = Get.find();
+  //AuthController authController = Get.find();
   int _selectedIndex = 0;
 
   void _onItemTapped(int index) async {
-    if (index == 4) {
-      if (GetPlatform.isAndroid) {
-        PackageInfo packageInfo = await PackageInfo.fromPlatform();
-        Share.share(
-            'For getting all details about football,  Download the app now , AppLink : https://play.google.com/store/apps/details?id=${packageInfo.packageName}',
-            subject: 'Look what we made!');
-      } else {
-        Share.share(
-            'For getting all details about football,  Download the app now , AppLink : ${settingController.settings.value.iosAppShareLink}',
-            subject: 'Look what we made!');
-      }
-    } else {
-      setState(() {
-        _selectedIndex = index;
-      });
-    }
+    setState(() {
+      _selectedIndex = index;
+    });
   }
 
   @override
