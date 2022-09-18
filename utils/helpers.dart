@@ -4,6 +4,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:get_storage/get_storage.dart';
+import '/consts/consts.dart';
 
 getHeight(context, percentage) {
   double height = MediaQuery.of(context).size.height;
