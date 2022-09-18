@@ -59,6 +59,33 @@ showSnackBar(String message, [callback, int duration = 5]) {
 
   ScaffoldMessenger.of(Get.context!).showSnackBar(snackBar);
 }
+datePicker(
+    {required DateTime initialDate,
+    required Null Function(DateTime date) onChange}) async {
+  final DateTime? date = await showDatePicker(
+    context: Get.context!,
+    initialDate: initialDate,
+    firstDate: DateTime.now().add(const Duration(days: -30)),
+    lastDate: DateTime.now().add(const Duration(days: 30)),
+    builder: (BuildContext context, Widget? child) {
+      return Theme(
+        data: ThemeData.light().copyWith(
+          primaryColor: AppColors.primaryColor,
+          colorScheme: ColorScheme.light(
+            primary: Theme.of(context).primaryColor,
+          ),
+          buttonTheme:
+              const ButtonThemeData(textTheme: ButtonTextTheme.primary),
+        ),
+        child: child!,
+      );
+    },
+  );
+
+  if (date != null) {
+    onChange(date);
+  }
+}
 
 readStorage(key) {
   var box = GetStorage();
