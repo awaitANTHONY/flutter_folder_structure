@@ -60,6 +60,7 @@ showSnackBar(String message, [callback, int duration = 5]) {
 
   ScaffoldMessenger.of(Get.context!).showSnackBar(snackBar);
 }
+
 datePicker(
     {required DateTime initialDate,
     required Null Function(DateTime date) onChange}) async {
@@ -86,6 +87,33 @@ datePicker(
   if (date != null) {
     onChange(date);
   }
+}
+
+initNotification() async {
+  dd('initNotification');
+
+  FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+    var data = message.data;
+
+    if (data['type'] == 'content') {
+      Map arguments = {
+        'title': data['title'],
+        'id': data['id'],
+        'coverImage': data['image'],
+        'content_type': data['content_type'],
+      };
+    }
+
+    if (data['type'] == 'url') {
+      launchURL(data['action_url']);
+    }
+
+    if (data['type'] == 'inApp') {}
+  });
+
+  FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+    dd(message.notification?.title);
+  });
 }
 
 readStorage(key) {
