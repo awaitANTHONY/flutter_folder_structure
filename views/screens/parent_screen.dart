@@ -46,27 +46,11 @@ class ParentScreenState extends State<ParentScreen> {
           AppTexts.appName,
           style: TextStyle(
             fontFamily: GoogleFonts.carterOne().fontFamily,
-            fontWeight: FontWeight.bold,
-            fontSize: 24,
           ),
         ),
         centerTitle: true,
-        leading: const SizedBox(),
         actions: [
-          InkWell(
-            onTap: () async {
-              _scaffoldKey.currentState?.openEndDrawer();
-            },
-            child: Padding(
-              padding: const EdgeInsets.all(8),
-              child: Image.asset(
-                'assets/images/menu.png',
-                height: 100,
-                width: 24,
-                color: AppColors.text,
-              ),
-            ),
-          ),
+          
         ],
         systemOverlayStyle: const SystemUiOverlayStyle(
           statusBarColor: AppColors.background,
@@ -74,7 +58,6 @@ class ParentScreenState extends State<ParentScreen> {
           statusBarBrightness: Brightness.dark,
         ),
       ),
-      endDrawer: Container(),
       backgroundColor: AppColors.background,
       body: Container(),
     );
