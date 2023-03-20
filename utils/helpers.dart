@@ -89,26 +89,38 @@ datePicker(
   }
 }
 
-initNotification() async {
+initNotification({required Null Function(RemoteMessage message) onOpen}) async {
   dd('initNotification');
 
+  FirebaseMessaging messaging = FirebaseMessaging.instance;
+
+  NotificationSettings settings = await messaging.requestPermission(
+    alert: true,
+    announcement: false,
+    badge: true,
+    carPlay: false,
+    criticalAlert: false,
+    provisional: false,
+    sound: true,
+  );
+
+  if (settings.authorizationStatus == AuthorizationStatus.authorized) {
+    dd('User granted permission');
+  } else if (settings.authorizationStatus == AuthorizationStatus.provisional) {
+    dd('User granted provisional permission');
+  } else {
+    dd('User declined or has not accepted permission');
+  }
+
+  //dd(await FirebaseMessaging.instance.getToken());
+  await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
+    alert: true,
+    badge: true,
+    sound: true,
+  );
+
   FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-    var data = message.data;
-
-    if (data['type'] == 'content') {
-      Map arguments = {
-        'title': data['title'],
-        'id': data['id'],
-        'coverImage': data['image'],
-        'content_type': data['content_type'],
-      };
-    }
-
-    if (data['type'] == 'url') {
-      launchURL(data['action_url']);
-    }
-
-    if (data['type'] == 'inApp') {}
+    onOpen(message);
   });
 
   FirebaseMessaging.onMessage.listen((RemoteMessage message) {
