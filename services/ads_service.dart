@@ -1,27 +1,17 @@
-// // ignore_for_file: library_private_types_in_public_api
-
-// import 'dart:io';
-
-// import 'package:cached_network_image/cached_network_image.dart';
-// import 'package:flutter/foundation.dart';
 // import 'package:flutter/material.dart';
-// import 'package:flutter_rating_stars/flutter_rating_stars.dart';
-// import '/consts/AppAssets.dart';
-// import '/consts/AppSizes.dart';
-// import 'package:hexcolor/hexcolor.dart';
-// import 'package:startapp_sdk/startapp.dart';
-// import '/controllers/setting_controller.dart';
-// import '/utils/helpers.dart';
 // import 'package:get/get.dart';
 // import 'package:google_mobile_ads/google_mobile_ads.dart';
+
+// import '/controllers/setting_controller.dart';
+// import '/utils/helpers.dart';
+// import '/consts/consts.dart';
+// import '/controllers/auth_controller.dart';
 
 // int _numInterstitialLoadAttempts = 0;
 
 // class AdsService {
 //   static SettingController controller = Get.find<SettingController>();
-
-//   static StartAppSdk startAppSdk = StartAppSdk();
-//   static StartAppInterstitialAd? startAppInterstitialAd;
+//   static AuthController authController = Get.find();
 //   static VoidCallback startAppCallback = () {};
 
 //   static InterstitialAd? interstitialAd;
@@ -32,7 +22,7 @@
 //   );
 
 //   static void createInterstitialAd([callback]) async {
-//     if (!controller.adsStatus.value || controller.isSubscribed.value) {
+//     if (!controller.adStatus.value || authController.isSubscribed.value) {
 //       return;
 //     }
 //     if (controller.adsType.value == 'google') {
@@ -41,9 +31,8 @@
 //         request: request,
 //         adLoadCallback: InterstitialAdLoadCallback(
 //           onAdLoaded: (InterstitialAd ad) {
-//             if (kDebugMode) {
-//               dd('$ad loaded');
-//             }
+//             dd('InterstitialAd $ad loaded');
+
 //             interstitialAd = ad;
 //             _numInterstitialLoadAttempts = 0;
 //             if (callback != null) {
@@ -53,9 +42,8 @@
 //             }
 //           },
 //           onAdFailedToLoad: (LoadAdError error) {
-//             if (kDebugMode) {
-//               dd('InterstitialAd failed to load: $error.');
-//             }
+//             dd('InterstitialAd failed to load: $error.');
+
 //             _numInterstitialLoadAttempts += 1;
 //             interstitialAd = null;
 //             if (_numInterstitialLoadAttempts <= 3) {
@@ -65,40 +53,28 @@
 //         ),
 //       );
 //     } else if (controller.adsType.value == 'startapp') {
-//       startAppSdk
-//           .loadInterstitialAd(
-//               onAdHidden: () {
-//                 startAppCallback();
-//               },
-//               prefs: const StartAppAdPreferences(adTag: 'home_screen'))
-//           .then((interstitialAd) {
-//         startAppInterstitialAd = interstitialAd;
-//       }).onError<StartAppException>((ex, stackTrace) {
-//         debugPrint("Error loading Interstitial ad: ${ex.message}");
-//       }).onError((error, stackTrace) {
-//         debugPrint("Error loading Interstitial ad: $error");
-//       });
 //       dd('startapp');
 //     } else if (controller.adsType.value == 'facebook') {}
 //   }
 
 //   static void showInterstitialAd(callback,
 //       {adControl = true, onlyOn = ''}) async {
-//     if (!controller.adsStatus.value || controller.isSubscribed.value) {
+//     if (!controller.adStatus.value || authController.isSubscribed.value) {
 //       callback();
+
 //       return;
 //     }
 //     if (!controller.showAd() && adControl) {
 //       callback();
+
 //       return;
 //     }
 
 //     if (controller.adsType.value == 'google' &&
 //         (onlyOn == '' || onlyOn == 'google')) {
+//       dd('InterstitialAd');
 //       if (interstitialAd == null) {
-//         if (kDebugMode) {
-//           dd('Warning: attempt to show interstitial before loaded.');
-//         }
+//         dd('Warning: attempt to show interstitial before loaded.');
 
 //         callback();
 
@@ -126,26 +102,6 @@
 //       interstitialAd = null;
 //     } else if (controller.adsType.value == 'startapp' &&
 //         (onlyOn == '' || onlyOn == 'startapp')) {
-//       if (startAppInterstitialAd == null) {
-//         dd('Warning: attempt to show interstitial before loaded.');
-
-//         callback();
-
-//         return;
-//       }
-
-//       startAppInterstitialAd?.show().then((shown) {
-//         if (shown) {
-//           startAppInterstitialAd = null;
-//           createInterstitialAd(callback);
-//         }
-//         startAppCallback = () {
-//           callback();
-//         };
-//         return null;
-//       }).onError((error, stackTrace) {
-//         debugPrint("Error showing Interstitial ad: $error");
-//       });
 //       dd('startapp');
 //     } else if (controller.adsType.value == 'facebook' &&
 //         (onlyOn == '' || onlyOn == 'facebook')) {}
@@ -155,18 +111,17 @@
 // class BannerAds extends StatelessWidget {
 //   BannerAds({Key? key}) : super(key: key);
 //   final SettingController settingController = Get.find();
-
+//   final AuthController authController = Get.find();
 //   @override
 //   Widget build(BuildContext context) {
+//     dd('');
 //     return Obx(() {
-//       if (!settingController.adsStatus.value ||
-//           settingController.isSubscribed.value) {
+//       if (!settingController.adStatus.value ||
+//           authController.isSubscribed.value) {
 //         return const SizedBox();
 //       } else if (settingController.adsType.value == 'google') {
 //         return const GoogleBannerAds();
-//       } else if (settingController.adsType.value == 'startapp') {
-//         return const StartappBannerAds();
-//       }
+//       } else if (settingController.adsType.value == 'startapp') {}
 
 //       return const SizedBox();
 //     });
@@ -227,7 +182,7 @@
 //   void didChangeDependencies() {
 //     super.didChangeDependencies();
 
-//     if (!_loadingAnchoredBanner && settingController.adsStatus.value) {
+//     if (!_loadingAnchoredBanner && settingController.adStatus.value) {
 //       _loadingAnchoredBanner = true;
 //       _createAnchoredBanner(context);
 //     }
@@ -252,39 +207,38 @@
 //   }
 // }
 
-// class NativeAds extends StatefulWidget {
-//   const NativeAds({Key? key}) : super(key: key);
+// class InlineAds extends StatefulWidget {
+//   const InlineAds({Key? key}) : super(key: key);
 
 //   @override
-//   State<NativeAds> createState() => _NativeAdsState();
+//   State<InlineAds> createState() => _InlineAdsState();
 // }
 
-// class _NativeAdsState extends State<NativeAds> {
+// class _InlineAdsState extends State<InlineAds> {
 //   final SettingController settingController = Get.find();
 
 //   @override
 //   Widget build(BuildContext context) {
-//     if (!settingController.adsStatus.value ||
-//         settingController.isSubscribed.value) {
+//     if (!settingController.adStatus.value) {
 //       return const SizedBox();
 //     } else if (settingController.adsType.value == 'google') {
-//       return const InlineAds();
+//       return const GoogleInlineAds();
 //     } else if (settingController.adsType.value == 'startapp') {
-//       return const StartappNativeAds();
+//       return const SizedBox();
 //     }
 
 //     return const SizedBox();
 //   }
 // }
 
-// class InlineAds extends StatefulWidget {
-//   const InlineAds({Key? key}) : super(key: key);
+// class GoogleInlineAds extends StatefulWidget {
+//   const GoogleInlineAds({Key? key}) : super(key: key);
 
 //   @override
-//   InlineAdsState createState() => InlineAdsState();
+//   GoogleInlineAdsState createState() => GoogleInlineAdsState();
 // }
 
-// class InlineAdsState extends State<InlineAds> {
+// class GoogleInlineAdsState extends State<GoogleInlineAds> {
 //   SettingController settingController = Get.find();
 //   BannerAd? _bannerAd;
 //   bool _bannerAdIsLoaded = false;
@@ -293,10 +247,13 @@
 //   Widget build(BuildContext context) {
 //     final BannerAd? bannerAd = _bannerAd;
 //     if (_bannerAdIsLoaded && bannerAd != null) {
-//       return SizedBox(
-//         height: bannerAd.size.height.toDouble(),
-//         width: bannerAd.size.width.toDouble(),
-//         child: AdWidget(ad: _bannerAd!),
+//       return Container(
+//         margin: const EdgeInsets.only(top: 5, bottom: 5),
+//         child: SizedBox(
+//           height: bannerAd.size.height.toDouble(),
+//           width: bannerAd.size.width.toDouble(),
+//           child: AdWidget(ad: _bannerAd!),
+//         ),
 //       );
 //     }
 
@@ -335,222 +292,114 @@
 //   }
 // }
 
-// class StartappBannerAds extends StatefulWidget {
-//   const StartappBannerAds({Key? key}) : super(key: key);
+// class NativeAds extends StatefulWidget {
+//   const NativeAds({super.key});
 
 //   @override
-//   StartappBannerAdsState createState() => StartappBannerAdsState();
+//   State<NativeAds> createState() => _NativeAdsState();
 // }
 
-// class StartappBannerAdsState extends State<StartappBannerAds> {
-//   StartAppBannerAd? bannerAd;
-//   StartAppSdk startAppSdk = StartAppSdk();
-//   static SettingController controller = Get.find<SettingController>();
-//   @override
-//   void initState() {
-//     super.initState();
+// class _NativeAdsState extends State<NativeAds> {
+//   final SettingController settingController = Get.find();
 
-//     if (Platform.isAndroid) {
-//       if (controller.settings.value.androidClickControl != 'off') {
-//         startAppSdk
-//             .loadBannerAd(StartAppBannerType.BANNER,
-//                 prefs: const StartAppAdPreferences(adTag: 'primary'))
-//             .then((bannerAd) {
-//           setState(() {
-//             this.bannerAd = bannerAd;
-//           });
-//         }).onError<StartAppException>((ex, stackTrace) {
-//           debugPrint("Error loading Banner ad: ${ex.message}");
-//         }).onError((error, stackTrace) {
-//           debugPrint("Error loading Banner ad: $error");
-//         });
-//       }
+//   @override
+//   Widget build(BuildContext context) {
+//     if (!settingController.adStatus.value) {
+//       return const SizedBox();
+//     } else if (settingController.adsType.value == 'google') {
+//       return const GoogleNativeAd();
+//     } else if (settingController.adsType.value == 'startapp') {
+//       return const SizedBox();
 //     }
+
+//     return const SizedBox();
+//   }
+// }
+
+// class GoogleNativeAd extends StatefulWidget {
+//   const GoogleNativeAd({super.key});
+
+//   @override
+//   State<GoogleNativeAd> createState() => _GoogleNativeAdState();
+// }
+
+// class _GoogleNativeAdState extends State<GoogleNativeAd> {
+//   final SettingController settingController = Get.find();
+//   NativeAd? _nativeAd;
+//   bool _nativeAdIsLoaded = false;
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return (_nativeAd != null && _nativeAdIsLoaded)
+//         ? Stack(
+//             children: [
+//               SizedBox(
+//                 height: 360,
+//                 child: AdWidget(ad: _nativeAd!),
+//               ),
+//             ],
+//           )
+//         : const SizedBox();
+//   }
+
+//   @override
+//   void didChangeDependencies() {
+//     super.didChangeDependencies();
+
+//     _nativeAd = NativeAd(
+//       adUnitId: settingController.nativePlacementId.value,
+//       request: const AdRequest(),
+//       listener: NativeAdListener(
+//         onAdLoaded: (Ad ad) {
+//           dd('$NativeAd loaded.');
+//           setState(() {
+//             _nativeAdIsLoaded = true;
+//           });
+//         },
+//         onAdFailedToLoad: (Ad ad, LoadAdError error) {
+//           dd('$NativeAd failedToLoad: $error');
+//           ad.dispose();
+//         },
+//         onAdOpened: (Ad ad) => dd('$NativeAd onAdOpened.'),
+//         onAdClosed: (Ad ad) => dd('$NativeAd onAdClosed.'),
+//       ),
+//       nativeTemplateStyle: NativeTemplateStyle(
+//         templateType: TemplateType.medium,
+//         mainBackgroundColor: Colors.white,
+//         callToActionTextStyle: NativeTemplateTextStyle(
+//           textColor: Colors.white,
+//           backgroundColor: Colors.blue.shade600,
+//           style: NativeTemplateFontStyle.normal,
+//           size: AppSizes.size15,
+//         ),
+//         primaryTextStyle: NativeTemplateTextStyle(
+//           textColor: Colors.black,
+//           backgroundColor: Colors.white,
+//           style: NativeTemplateFontStyle.bold,
+//           size: AppSizes.size15,
+//         ),
+//         secondaryTextStyle: NativeTemplateTextStyle(
+//           textColor: Colors.black54,
+//           backgroundColor: Colors.transparent,
+//           style: NativeTemplateFontStyle.normal,
+//           size: AppSizes.size14,
+//         ),
+//         tertiaryTextStyle: NativeTemplateTextStyle(
+//           textColor: Colors.brown,
+//           backgroundColor: Colors.white,
+//           style: NativeTemplateFontStyle.normal,
+//           size: AppSizes.size15,
+//         ),
+//       ),
+//       nativeAdOptions: NativeAdOptions(
+//         mediaAspectRatio: MediaAspectRatio.square,
+//       ),
+//     )..load();
 //   }
 
 //   @override
 //   void dispose() {
 //     super.dispose();
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Container(
-//       child: bannerAd != null ? StartAppBanner(bannerAd!) : const SizedBox(),
-//     );
-//   }
-// }
-
-// class StartappNativeAds extends StatefulWidget {
-//   const StartappNativeAds({Key? key}) : super(key: key);
-
-//   @override
-//   _StartappNativeAdsState createState() => _StartappNativeAdsState();
-// }
-
-// class _StartappNativeAdsState extends State<StartappNativeAds> {
-//   StartAppNativeAd? nativeAd;
-//   static StartAppSdk startAppSdk = StartAppSdk();
-//   static SettingController controller = Get.find<SettingController>();
-
-//   @override
-//   void initState() {
-//     super.initState();
-//     if (Platform.isAndroid) {
-//       if (controller.settings.value.androidClickControl != 'off') {
-//         startAppSdk
-//             .loadNativeAd(
-//                 prefs: const StartAppAdPreferences(adTag: 'game_over'))
-//             .then((nativeAd) {
-//           setState(() {
-//             this.nativeAd = nativeAd;
-//           });
-//         }).onError<StartAppException>((ex, stackTrace) {
-//           debugPrint("Error loading Native ad: ${ex.message}");
-//         }).onError((error, stackTrace) {
-//           debugPrint("Error loading Native ad: $error");
-//         });
-//       }
-//     }
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return nativeAd != null
-//         ? Container(
-//             margin: const EdgeInsets.only(left: 8, right: 8),
-//             decoration: BoxDecoration(
-//               color: Colors.white.withOpacity(0.8),
-//               borderRadius: BorderRadius.circular(5),
-//             ),
-//             child: StartAppNative(
-//               nativeAd!,
-//               (context, setState, nativeAd) {
-//                 return startAppStartappNativeAdsWidget(nativeAd);
-//               },
-//               height: 160,
-//             ),
-//           )
-//         : const SizedBox();
-//   }
-
-//   Widget startAppStartappNativeAdsWidget(StartAppNativeAd nativeAd) {
-//     return Column(
-//       children: [
-//         Container(
-//           margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
-//           child: Row(
-//             crossAxisAlignment: CrossAxisAlignment.start,
-//             children: [
-//               CachedNetworkImage(
-//                 imageUrl: nativeAd.imageUrl ?? '',
-//                 height: 100,
-//                 width: 100,
-//                 errorWidget: (context, url, error) {
-//                   return Image.asset(AppAssets.loader);
-//                 },
-//                 placeholder: (context, url) => Container(
-//                   alignment: Alignment.center,
-//                   height: double.infinity,
-//                   width: double.infinity,
-//                   child: SizedBox(
-//                     height: 2 * screenSize / 100,
-//                     width: 2 * screenSize / 100,
-//                     child: Image.asset(AppAssets.loader),
-//                   ),
-//                 ),
-//               ),
-//               Expanded(
-//                 child: Container(
-//                   margin: const EdgeInsets.symmetric(horizontal: 8),
-//                   child: Column(
-//                     crossAxisAlignment: CrossAxisAlignment.start,
-//                     children: [
-//                       Text(
-//                         nativeAd.title ?? '',
-//                         maxLines: 1,
-//                         style: TextStyle(
-//                           fontSize: AppSizes.font13,
-//                           fontWeight: FontWeight.w500,
-//                         ),
-//                       ),
-//                       const SizedBox(
-//                         height: 4,
-//                       ),
-//                       Text(
-//                         '${cutString(nativeAd.description, 50)}',
-//                         maxLines: 2,
-//                       ),
-//                       const SizedBox(
-//                         height: 4,
-//                       ),
-//                       RatingStars(
-//                         value: nativeAd.rating!,
-//                         starBuilder: (index, color) => Icon(
-//                           Icons.star,
-//                           color: color,
-//                         ),
-//                         starCount: 5,
-//                         starSize: 20,
-//                         valueLabelColor: const Color(0xff9b9b9b),
-//                         valueLabelTextStyle: const TextStyle(
-//                             color: Colors.white,
-//                             fontWeight: FontWeight.w400,
-//                             fontStyle: FontStyle.normal,
-//                             fontSize: 12.0),
-//                         valueLabelRadius: 10,
-//                         maxValue: 5,
-//                         starSpacing: 2,
-//                         maxValueVisibility: true,
-//                         valueLabelVisibility: false,
-//                         animationDuration: const Duration(milliseconds: 1000),
-//                         valueLabelPadding: const EdgeInsets.symmetric(
-//                             vertical: 1, horizontal: 8),
-//                         valueLabelMargin: const EdgeInsets.only(right: 8),
-//                         starOffColor: const Color(0xffe7e8ea),
-//                         starColor: HexColor('#FECC09'),
-//                       ),
-//                     ],
-//                   ),
-//                 ),
-//               ),
-//             ],
-//           ),
-//         ),
-//         Container(
-//           padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 10),
-//           margin: const EdgeInsets.symmetric(horizontal: 8),
-//           width: double.infinity,
-//           decoration: BoxDecoration(
-//             borderRadius: BorderRadius.circular(0),
-//             color: HexColor('#D9E5F9'),
-//             boxShadow: const [
-//               BoxShadow(
-//                 color: Colors.grey,
-//                 blurRadius: 0.1,
-//                 spreadRadius: 0.0,
-//                 offset: Offset(0, 0),
-//               )
-//             ],
-//           ),
-//           child: Text(
-//             nativeAd.callToAction ?? ''.toUpperCase(),
-//             style: TextStyle(
-//               fontSize: 16,
-//               color: HexColor('#0550E5'),
-//               fontWeight: FontWeight.bold,
-//             ),
-//             textAlign: TextAlign.center,
-//           ),
-//         ),
-//       ],
-//     );
-//   }
-
-//   String? cutString(String? input, int length) {
-//     if (input != null && input.length > length) {
-//       return '${input.substring(0, length)}...';
-//     }
-//     return input;
+//     _nativeAd?.dispose();
 //   }
 // }

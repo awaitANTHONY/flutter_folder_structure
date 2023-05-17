@@ -12,7 +12,7 @@
 //     ],
 //   );
 
-//   signIn() async {
+//   signIn(callback) async {
 //     authController.isLoading.value = true;
 //     try {
 //       final GoogleSignInAccount? googleSignInAccount =
@@ -20,14 +20,17 @@
 
 //       if (googleSignInAccount != null) {
 //         Map data = {
-//           'name': googleSignInAccount.displayName,
+//           'first_name': googleSignInAccount.displayName,
+//           'last_name': googleSignInAccount.displayName,
 //           'email': googleSignInAccount.email,
 //           'password': googleSignInAccount.id,
 //           'password_confirmation': googleSignInAccount.id,
 //           'provider': 'google',
 //         };
 
-//         authController.signUp(data);
+//         dd(data);
+
+//         authController.signUp(data, callback);
 //       } else {
 //         authController.isLoading.value = false;
 //       }

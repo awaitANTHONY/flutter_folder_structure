@@ -1,64 +1,63 @@
-class UserModel {
+class User {
   bool? status;
   String? accessToken;
+  UserData? data;
   String? message;
-  User? user;
 
-  UserModel({this.status, this.accessToken, this.message, this.user});
+  User({this.status, this.accessToken, this.data, this.message});
 
-  UserModel.fromJson(Map<String, dynamic> json) {
+  User.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     accessToken = json['access_token'];
+    data = json['data'] != null ? UserData.fromJson(json['data']) : null;
     message = json['message'];
-    user = json['user'] != null ? User.fromJson(json['user']) : null;
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['status'] = status;
     data['access_token'] = accessToken;
-    data['message'] = message;
-    if (user != null) {
-      data['user'] = user?.toJson();
+    if (this.data != null) {
+      data['data'] = this.data!.toJson();
     }
+    data['message'] = message;
     return data;
   }
 }
 
-class User {
+class UserData {
+  int? id;
+  String? firstName;
+  String? lastName;
   String? email;
-  String? subscriptionId;
-  String? expiredAt;
-  int? status;
-  String? name;
-  String? subscriptionTitle;
+  String? image;
+  String? provider;
 
-  User(
-      {this.email,
-      this.subscriptionId,
-      this.expiredAt,
-      this.status,
-      this.name,
-      this.subscriptionTitle});
+  UserData(
+      {this.id,
+      this.firstName,
+      this.lastName,
+      this.email,
+      this.image,
+      this.provider});
 
-  User.fromJson(Map<String, dynamic> json) {
+  UserData.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    firstName = json['first_name'];
+    lastName = json['last_name'];
     email = json['email'];
-    subscriptionId = json['subscription_id'];
-    expiredAt = json['expired_at'];
-    status = json['status'];
-    name = json['name'];
-    subscriptionTitle = json['subscription_title'];
+    image = json['image'];
+    provider = json['provider'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['first_name'] = firstName;
+    data['last_name'] = lastName;
     data['email'] = email;
-    data['subscription_id'] = subscriptionId;
-    data['expired_at'] = expiredAt;
-    data['status'] = status;
-    data['name'] = name;
-    data['subscription_title'] = subscriptionTitle;
-
+    data['image'] = image;
+    data['provider'] = provider;
     return data;
   }
 }

@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:package_info_plus/package_info_plus.dart';
-import 'package:share_plus/share_plus.dart';
-import '/controllers/auth_controller.dart';
 import '/consts/consts.dart';
 
 class ParentScreen extends StatefulWidget {
@@ -19,7 +15,6 @@ class ParentScreen extends StatefulWidget {
 }
 
 class ParentScreenState extends State<ParentScreen> {
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   //AuthController authController = Get.find();
   int _selectedIndex = 0;
 
@@ -38,7 +33,6 @@ class ParentScreenState extends State<ParentScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: _scaffoldKey,
       appBar: AppBar(
         elevation: 0,
         backgroundColor: AppColors.background,
@@ -49,9 +43,6 @@ class ParentScreenState extends State<ParentScreen> {
           ),
         ),
         centerTitle: true,
-        actions: [
-          
-        ],
         systemOverlayStyle: const SystemUiOverlayStyle(
           statusBarColor: AppColors.background,
           statusBarIconBrightness: Brightness.light,
@@ -59,7 +50,10 @@ class ParentScreenState extends State<ParentScreen> {
         ),
       ),
       backgroundColor: AppColors.background,
-      body: Container(),
+      body: IndexedStack(
+        index: _selectedIndex,
+        children: const [],
+      ),
     );
   }
 }

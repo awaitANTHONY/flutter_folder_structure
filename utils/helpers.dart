@@ -89,43 +89,47 @@ datePicker(
   }
 }
 
-initNotification({required Null Function(RemoteMessage message) onOpen}) async {
-  dd('initNotification');
+// initNotification({required Null Function(RemoteMessage message) onOpen}) async {
+//   dd('initNotification');
 
-  FirebaseMessaging messaging = FirebaseMessaging.instance;
+//   FirebaseMessaging messaging = FirebaseMessaging.instance;
 
-  NotificationSettings settings = await messaging.requestPermission(
-    alert: true,
-    announcement: false,
-    badge: true,
-    carPlay: false,
-    criticalAlert: false,
-    provisional: false,
-    sound: true,
-  );
+//   NotificationSettings settings = await messaging.requestPermission(
+//     alert: true,
+//     announcement: false,
+//     badge: true,
+//     carPlay: false,
+//     criticalAlert: false,
+//     provisional: false,
+//     sound: true,
+//   );
 
-  if (settings.authorizationStatus == AuthorizationStatus.authorized) {
-    dd('User granted permission');
-  } else if (settings.authorizationStatus == AuthorizationStatus.provisional) {
-    dd('User granted provisional permission');
-  } else {
-    dd('User declined or has not accepted permission');
-  }
+//   if (settings.authorizationStatus == AuthorizationStatus.authorized) {
+//     dd('User granted permission');
+//   } else if (settings.authorizationStatus == AuthorizationStatus.provisional) {
+//     dd('User granted provisional permission');
+//   } else {
+//     dd('User declined or has not accepted permission');
+//   }
 
-  //dd(await FirebaseMessaging.instance.getToken());
-  await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
-    alert: true,
-    badge: true,
-    sound: true,
-  );
+//   //dd(await FirebaseMessaging.instance.getToken());
+//   await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
+//     alert: true,
+//     badge: true,
+//     sound: true,
+//   );
 
-  FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-    onOpen(message);
-  });
+//   FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+//     onOpen(message);
+//   });
 
-  FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-    dd(message.notification?.title);
-  });
+//   FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+//     dd(message.notification?.title);
+//   });
+// }
+
+Future<String> getToken() {
+  return Future.value('');
 }
 
 readStorage(key) {

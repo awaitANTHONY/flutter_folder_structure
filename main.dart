@@ -63,39 +63,6 @@ class MyAppState extends State<MyApp> {
     settingController.loadData();
   }
 
-  // void initNotification() async {
-  //   if (kDebugMode) {
-  //     print('initNotification');
-  //     //print(await FirebaseMessaging.instance.getToken());
-  //   }
-
-  //   FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-  //     var data = message.data;
-
-  //     if (data['type'] == 'content') {
-  //       arguments = {
-  //         'title': data['title'],
-  //         'id': data['id'],
-  //         'coverImage': data['image'],
-  //         'content_type': data['content_type'],
-  //       };
-  //       hasNotification = true;
-  //     }
-
-  //     if (data['type'] == 'url') {
-  //       launchURL(data['action_url']);
-  //     }
-
-  //     if (data['type'] == 'inApp') {}
-  //   });
-
-  //   FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-  //     if (kDebugMode) {
-  //       print(message.notification?.title);
-  //     }
-  //   });
-  // }
-
   @override
   Widget build(BuildContext context) {
     return const Scaffold(

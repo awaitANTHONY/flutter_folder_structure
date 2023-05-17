@@ -1,152 +1,174 @@
-// import 'package:cnf_sports_new/services/api_services.dart';
-// import 'package:cnf_sports_new/services/vpn_service.dart';
-// import 'package:connectivity/connectivity.dart';
-// import 'package:connectivity_plus/connectivity_plus.dart';
-// import 'package:football_live_hd/controllers/setting_controller.dart';
-// import '/services/apple_auth_service.dart';
-// import '/services/inapp_purchase_service.dart';
-// import '/views/screens/auth/login_screen.dart';
-// import '/models/user.dart';
-// import '/services/api_service.dart';
+// import 'dart:convert';
+// import 'dart:developer';
+
+// import 'package:flutter/services.dart';
+// import '/services/api_services.dart';
+// import '/consts/consts.dart';
+// import '/controllers/setting_controller.dart';
 // import '/services/google_auth_service.dart';
-// import '/utils/VpnService.dart';
+// import '/models/user.dart';
 // import '/utils/helpers.dart';
 // import '/views/screens/parent_screen.dart';
 // import 'package:get/get.dart';
+// import 'package:http/http.dart' as http;
 
 // class AuthController extends GetxController {
+//   var client = http.Client();
 //   SettingController settingController = Get.find();
 //   RxBool isSignIn = false.obs;
 //   RxBool isLoading = false.obs;
-//   RxString token = ''.obs;
-//   Rx<User> user = User().obs;
+//   RxString accessToken = ''.obs;
+//   Rx<UserData> user = UserData().obs;
 
-//   signIn(Map data) async {
+//   signIn(Map<String, dynamic> data) async {
 //     isLoading.value = true;
-//     var connectivityResult = await (Connectivity().checkConnectivity());
-//     var vpnResult = await CheckVpnConnection.isVpnActive();
-//     if (connectivityResult != ConnectivityResult.none && !vpnResult) {
-//       try {
-//         var response = await ApiService.signIn(data);
 
-//         if (response != {} && response['status'] == true) {
-//           token.value = response['access_token'];
-//           writeStorage('token', response['access_token']);
-//           user.value = User.fromJson(response['data']);
-//           isSignIn.value = true;
-//           if (user.value.subscriptionId != 0) {
-//             settingController.isSubscribed.value = true;
-//           }
-//           showToast('Successfully SignIn.');
-//           Get.offAll(() => const ParentScreen());
-//         } else {
-//           showToast(response['message'] ?? 'Unknown error.');
-//         }
-//       } catch (e) {
-//         showSnackBar('Server Error! Please Try again.'.tr, () {});
-//       } finally {
-//         isLoading.value = false;
+//     try {
+//       String url = '${AppConsts.baseUrl}${AppConsts.signin}';
+//       Map<String, String> headers = {
+//         'X-API-KEY': AppConsts.apiKey,
+//       };
+//       Map<String, dynamic> body = data;
+//       var response = await ApiService.post(
+//         url,
+//         headers: headers,
+//         body: body,
+//       );
+
+//       var jsonString = response.body;
+//       var responseModel = User.fromJson(jsonDecode(jsonString));
+
+//       if (responseModel.status == true) {
+//         accessToken.value = responseModel.accessToken!;
+//         writeStorage('accessToken', responseModel.accessToken!);
+//         user.value = responseModel.data!;
+//         isSignIn.value = true;
+//         showToast('Successfully SignIn.');
+//         Get.offAll(() => const ParentScreen());
+//       } else {
+//         showToast(responseModel.message ?? 'Unknown error.');
 //       }
-//     } else {
-//       showSnackBar('No internet connection please try again!'.tr, () {});
+//     } catch (e) {
+//       showSnackBar('Server Error! Please Try again.'.tr, () {});
+//     } finally {
+//       isLoading.value = false;
 //     }
 //   }
 
-//   signUp(Map data) async {
+//   signUp(Map<String, dynamic> data, VoidCallback callback) async {
 //     isLoading.value = true;
-//     var connectivityResult = await (Connectivity().checkConnectivity());
-//     var vpnResult = await CheckVpnConnection.isVpnActive();
-//     if (connectivityResult != ConnectivityResult.none && !vpnResult) {
-//       try {
-//         var response = await ApiService.signUp(data);
 
-//         if (response != {} && response['status'] == true) {
-//           token.value = response['access_token'];
-//           writeStorage('token', response['access_token']);
-//           user.value = User.fromJson(response['data']);
-//           isSignIn.value = true;
-//           if (user.value.subscriptionId != 0) {
-//             settingController.isSubscribed.value = true;
-//           }
-//           showToast('Successfully SignIn.');
-//           Get.offAll(() => const ParentScreen());
-//         } else {
-//           showToast(response['message'] ?? 'Unknown error.');
-//         }
-//       } catch (e) {
-//         showSnackBar('Server Error! Please Try again.'.tr, () {});
-//       } finally {
-//         isLoading.value = false;
+//     try {
+//       String url = '${AppConsts.baseUrl}${AppConsts.signup}';
+//       Map<String, String> headers = {
+//         'X-API-KEY': AppConsts.apiKey,
+//       };
+//       data['device_token'] = await getToken();
+//       Map<String, dynamic> body = data;
+//       var response = await ApiService.post(
+//         url,
+//         headers: headers,
+//         body: body,
+//       );
+
+//       var jsonString = response.body;
+//       var responseModel = User.fromJson(jsonDecode(jsonString));
+
+//       if (responseModel.status == true) {
+//         accessToken.value = responseModel.accessToken!;
+//         writeStorage('accessToken', responseModel.accessToken!);
+//         user.value = responseModel.data!;
+//         isSignIn.value = true;
+//         showToast('Successfully Signup.');
+//         Get.offAll(() => const ParentScreen());
+//         callback();
+
+//         dd('callback()');
+//       } else {
+//         showToast(responseModel.message ?? 'Unknown error.');
 //       }
-//     } else {
-//       showSnackBar('No internet connection please try again!'.tr, () {});
+//     } catch (e) {
+//       log(e.toString());
+//       showSnackBar('Server Error! Please Try again.'.tr, () {});
+//     } finally {
+//       isLoading.value = false;
 //     }
 //   }
 
 //   loadUser() async {
 //     isLoading.value = true;
-//     var connectivityResult = await (Connectivity().checkConnectivity());
-//     var vpnResult = await CheckVpnConnection.isVpnActive();
-//     if (connectivityResult != ConnectivityResult.none && !vpnResult) {
-//       try {
-//         var response = await ApiService.loadUser();
 
-//         if (response != {} && response['status'] == true) {
-//           user.value = User.fromJson(response['data']);
-//           isSignIn.value = true;
+//     try {
+//       String url = '${AppConsts.baseUrl}${AppConsts.user}';
+//       Map<String, String> headers = {
+//         'X-API-KEY': AppConsts.apiKey,
+//         'Authorization': 'Bearer ${accessToken.value}',
+//       };
 
-//           InAppPurchaseService.checkSubscribed(user.value.subscriptionId != 0);
-//         }
-//       } catch (e) {
-//         //
-//       } finally {
-//         isLoading.value = false;
+//       Map<String, dynamic> body = {};
+//       var response = await ApiService.post(
+//         url,
+//         headers: headers,
+//         body: body,
+//       );
+
+//       var jsonString = response.body;
+//       var responseModel = User.fromJson(jsonDecode(jsonString));
+
+//       if (responseModel.status == true) {
+//         user.value = responseModel.data!;
+//         isSignIn.value = true;
+//       } else {
+//         showToast(responseModel.message ?? 'Unknown error.');
 //       }
-//     } else {
-//       showSnackBar('No internet connection please try again!'.tr, () {});
+//     } catch (e) {
+//       //
+//     } finally {
+//       isLoading.value = false;
 //     }
 //   }
 
-//   signOut() {
-//     writeStorage('token', null);
+//   signOut(VoidCallback callback) {
+//     writeStorage('accessToken', null);
+//     accessToken.value = '';
 //     isSignIn.value = false;
-//     settingController.isSubscribed.value = false;
 //     showToast('Successfully Signout.');
 
 //     if (user.value.provider == 'google') {
 //       GoogleAuthService().signOut();
 //     } else if (user.value.provider == 'apple') {
-//       AppleAuthService().signOut();
+//       //AppleAuthService().signOut();
 //     }
+
+//     callback();
 //   }
 
-//   forgetPassword(Map data) async {
-//     isLoading.value = true;
-//     var connectivityResult = await (Connectivity().checkConnectivity());
-//     var vpnResult = await CheckVpnConnection.isVpnActive();
-//     if (connectivityResult != ConnectivityResult.none && !vpnResult) {
-//       try {
-//         var response = await ApiService.forgetPassword(data);
-//         if (response != {} && response['status'] == true) {
-//           showToast(response['message']);
-//           Get.to(() => const LoginScreen());
-//         } else {
-//           showToast(response['message'] ?? 'Unknown error.');
-//         }
-//       } catch (e) {
-//         showSnackBar('Server Error! Please Try again.'.tr, () {});
-//       } finally {
-//         isLoading.value = false;
-//       }
-//     } else {
-//       showSnackBar('No internet connection please try again!'.tr, () {});
-//     }
-//   }
+//   // forgetPassword(Map data) async {
+//   //   isLoading.value = true;
+//   //   var connectivityResult = await (Connectivity().checkConnectivity());
+//   //   if (connectivityResult != ConnectivityResult.none) {
+//   //     try {
+//   //       var response = await ApiService.forgetPassword(data);
+//   //       if (response != {} && response['status'] == true) {
+//   //         showToast(response['message']);
+//   //         Get.to(() => const LoginScreen());
+//   //       } else {
+//   //         showToast(response['message'] ?? 'Unknown error.');
+//   //       }
+//   //     } catch (e) {
+//   //       showSnackBar('Server Error! Please Try again.'.tr, () {});
+//   //     } finally {
+//   //       isLoading.value = false;
+//   //     }
+//   //   } else {
+//   //     showSnackBar('No internet connection please try again!'.tr, () {});
+//   //   }
+//   // }
 
 //   onInitApp() async {
-//     var boxToken = readStorage('token');
+//     var boxToken = readStorage('accessToken');
 //     if (boxToken != null) {
-//       token.value = boxToken;
+//       accessToken.value = boxToken;
 //       await Future.delayed(2.seconds);
 //       loadUser();
 //     }

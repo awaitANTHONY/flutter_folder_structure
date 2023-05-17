@@ -1,106 +1,53 @@
 import 'dart:convert';
-
-import 'package:get/get.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:http/http.dart' as http;
-import '/controllers/auth_controller.dart';
-import '/models/user.dart';
-import '/models/setting.dart';
-import '/consts/consts.dart';
+import 'package:shopify/utils/helpers.dart';
 
 class ApiService {
-  static var client = http.Client();
-  //static AuthController authController = Get.find();
+  static final http.Client _client = http.Client();
 
-  static Future<Setting> loadSettings() async {
-    Uri uri = Uri.parse(AppConsts.baseUrl + AppConsts.settings);
+  ApiService() {
+    dd('ApiService Init');
+  }
 
-    String body = jsonEncode(<String, dynamic>{
-      'api_key': AppConsts.apiKey,
-    });
+  static Future<http.Response> get(
+    String url, [
+    Map<String, String> headers = const {},
+  ]) async {
+    var connectivityResult = await (Connectivity().checkConnectivity());
+    if (connectivityResult != ConnectivityResult.none) {
+      Uri uri = Uri.parse(url);
 
-    var response = await client.post(
-      uri,
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: body,
-    );
-
-    if (response.statusCode == 200) {
-      var jsonString = response.body;
-      return Setting.fromJson(jsonDecode(jsonString));
+      headers['Content-Type'] = 'application/json; charset=UTF-8';
+      var response = await _client.get(
+        uri,
+        headers: headers,
+      );
+      return response;
     } else {
-      return Setting();
+      throw Exception('No internet connection please try again!');
     }
   }
 
-  static Future<UserModel> signup(data) async {
-    Uri uri = Uri.parse(AppConsts.baseUrl + AppConsts.signup);
+  static Future<http.Response> post(
+    String url, {
+    Map<String, String> headers = const {},
+    Map<String, dynamic> body = const {},
+  }) async {
+    var connectivityResult = await (Connectivity().checkConnectivity());
+    if (connectivityResult != ConnectivityResult.none) {
+      Uri uri = Uri.parse(url);
 
-    data['api_key'] = AppConsts.apiKey;
+      headers['Content-Type'] = 'application/json; charset=UTF-8';
+      var response = await _client.post(
+        uri,
+        headers: headers,
+        body: jsonEncode(body),
+      );
 
-    String body = jsonEncode(data);
-
-    var response = await client.post(
-      uri,
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: body,
-    );
-
-    if (response.statusCode == 200) {
-      var jsonString = response.body;
-      return UserModel.fromJson(jsonDecode(jsonString));
+      return response;
     } else {
-      return UserModel();
-    }
-  }
-
-  static Future<UserModel> signin(data) async {
-    Uri uri = Uri.parse(AppConsts.baseUrl + AppConsts.signin);
-
-    data['api_key'] = AppConsts.apiKey;
-
-    String body = jsonEncode(data);
-
-    var response = await client.post(
-      uri,
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: body,
-    );
-
-    if (response.statusCode == 200) {
-      var jsonString = response.body;
-      return UserModel.fromJson(jsonDecode(jsonString));
-    } else {
-      return UserModel();
-    }
-  }
-
-  static Future<UserModel> user() async {
-    Uri uri = Uri.parse(AppConsts.baseUrl + AppConsts.user);
-    var data = {};
-    data['api_key'] = AppConsts.apiKey;
-
-    String body = jsonEncode(data);
-
-    var response = await client.post(
-      uri,
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-        //'Authorization': 'Bearer ' + authController.accessToken.value,
-      },
-      body: body,
-    );
-
-    if (response.statusCode == 200) {
-      var jsonString = response.body;
-      return UserModel.fromJson(jsonDecode(jsonString));
-    } else {
-      return UserModel();
+      throw Exception('No internet connection please try again!');
     }
   }
 }
