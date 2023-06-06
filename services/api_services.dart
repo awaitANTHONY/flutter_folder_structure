@@ -11,9 +11,9 @@ class ApiService {
   }
 
   static Future<http.Response> get(
-    String url, [
-    Map<String, String> headers = const {},
-  ]) async {
+    String url, {
+      Map<String, String> headers = const {},
+    }) async {
     var connectivityResult = await (Connectivity().checkConnectivity());
     if (connectivityResult != ConnectivityResult.none) {
       Uri uri = Uri.parse(url);
