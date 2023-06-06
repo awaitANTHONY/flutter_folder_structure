@@ -9,3 +9,8 @@ import 'package:get/get.dart';
 import '/controllers/setting_controller.dart';
 
 SettingController settingController = Get.find();
+
+extension SpaceXY on double {
+  SizedBox get spaceX => SizedBox(width: this);
+  SizedBox get spaceY => SizedBox(height: this);
+}
