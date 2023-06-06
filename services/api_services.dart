@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:http/http.dart' as http;
-import 'package:shopify/utils/helpers.dart';
+import '/utils/helpers.dart';
 
 class ApiService {
   static final http.Client _client = http.Client();
