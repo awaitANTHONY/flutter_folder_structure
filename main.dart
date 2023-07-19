@@ -50,17 +50,13 @@ class MyApp extends StatefulWidget {
 }
 
 class MyAppState extends State<MyApp> {
-  SettingController settingController = Get.find();
-
-  var hasNotification = false;
-
-  late Map arguments;
-
   @override
   void initState() {
     super.initState();
 
-    settingController.loadData();
+    Future.delayed(5.seconds, () {
+      AdsService.requestConsent();
+    });
   }
 
   @override
@@ -70,3 +66,4 @@ class MyAppState extends State<MyApp> {
     );
   }
 }
+
