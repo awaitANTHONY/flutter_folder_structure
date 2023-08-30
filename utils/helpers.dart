@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -87,6 +88,62 @@ datePicker(
   if (date != null) {
     onChange(date);
   }
+}
+
+Widget cachedNetworkImage(
+  String imageUrl, {
+  double? height = double.infinity,
+  double? width = double.infinity,
+  BoxFit fit = BoxFit.fill,
+  Widget Function(BuildContext, ImageProvider<Object>)? imageBuilder,
+  Widget Function(BuildContext, String, DownloadProgress)?
+      progressIndicatorBuilder,
+  Widget Function(BuildContext, String, dynamic)? errorWidget,
+  Widget Function(BuildContext, String)? placeholder,
+  bool hide = true,
+}) {
+  // return Image.asset(
+  //   'assets/images/default-team.png',
+  //   height: height,
+  //   width: width,
+  //   fit: fit,
+  // );
+
+  return CachedNetworkImage(
+    imageUrl: imageUrl,
+    height: height,
+    width: width,
+    fit: fit,
+    imageBuilder: imageBuilder,
+    errorWidget: errorWidget ??
+        (context, url, error) {
+          return Center(
+            child: Image.asset(
+              'assets/images/default.png',
+              height: height,
+              width: width,
+              fit: fit,
+            ),
+          );
+        },
+    // progressIndicatorBuilder: progressIndicatorBuilder ?? null,
+    placeholder: placeholder ??
+        (context, url) {
+          return SizedBox(
+            height: height,
+            width: width,
+            child: const Center(
+              child: SizedBox(
+                height: 30,
+                width: 30,
+                child: CircularProgressIndicator(
+                  color: AppColors.primaryColor,
+                ),
+              ),
+            ),
+          );
+        },
+  );
 }
 
 // initNotification({required Null Function(RemoteMessage message) onOpen}) async {
