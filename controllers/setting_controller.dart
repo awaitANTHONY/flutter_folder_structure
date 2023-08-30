@@ -27,14 +27,15 @@ class SettingController extends GetxController {
 
   loadData() async {
     var connectivityResult = await (Connectivity().checkConnectivity());
-    var vpnResult = await CheckVpnConnection.isVpnActive();
-    if (connectivityResult != ConnectivityResult.none && !vpnResult) {
+    if (connectivityResult != ConnectivityResult.none) {
       try {
         String url = '${AppConsts.baseUrl}${AppConsts.settings}';
         Map<String, String> headers = {
           'X-API-KEY': AppConsts.apiKey,
         };
-        Map<String, dynamic> body = {};
+        Map<String, dynamic> body = {
+          'platform': Platform.isIOS ? 'ios' : 'android',
+        };
         var response = await ApiService.post(
           url,
           headers: headers,
@@ -46,10 +47,8 @@ class SettingController extends GetxController {
 
         if (responseModel.status == true) {
           store(responseModel);
-          //onInitApp(responseModel.data!.androidApplicationId!);
           await Future.delayed(2.seconds);
-
-          Get.offAll(() => const ParentScreen(page: 0));
+          Get.offAll(() => const ParentScreen(page: 4));
         } else {
           showSnackBar('Server Error! Please Try again.');
         }
