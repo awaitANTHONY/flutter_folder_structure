@@ -1,5 +1,5 @@
+import 'package:genx_translator/consts/consts.dart';
 // import 'package:google_mobile_ads/google_mobile_ads.dart';
-// import '/controllers/setting_controller.dart';
 // import '/utils/helpers.dart';
 // import 'package:flutter/foundation.dart';
 // import 'package:flutter/material.dart';
@@ -9,8 +9,6 @@
 // int _numRewardedInterstitialLoadAttempts = 0;
 
 // class AdsService {
-//   static SettingController controller = Get.find<SettingController>();
-
 //   static InterstitialAd? interstitialAd;
 //   static RewardedInterstitialAd? rewardedInterstitialAd;
 
@@ -19,6 +17,27 @@
 //     contentUrl: 'http://foo.com/bar.html',
 //     nonPersonalizedAds: true,
 //   );
+
+//   static init() async {
+//     if (!settingController.adsStatus.value ||
+//         settingController.isSubscribed.value) return;
+//     if (settingController.adsType.value == 'google') {
+//       await MobileAds.instance.updateRequestConfiguration(
+//         RequestConfiguration(
+//           tagForChildDirectedTreatment:
+//               TagForChildDirectedTreatment.unspecified,
+//           testDeviceIds: [
+//             "8FECD77B9178A2514A9BFB8F6DB2C99F",
+//             "AD9B79EB2D405F358FB2BDA489041B7B",
+//             "407A8A93820C155D8AF1CA6F0B746E28",
+//           ],
+//         ),
+//       );
+//     } else if (settingController.adsType.value == 'facebook') {
+//       await Future.delayed(1.seconds);
+//       //
+//     }
+//   }
 
 //   static Future<ConsentStatus> getConsentStatus() async {
 //     var status = await ConsentInformation.instance.getConsentStatus();
@@ -73,12 +92,12 @@
 //   }
 
 //   static void createInterstitialAd([callback]) async {
-//     if (!controller.adsStatus.value) {
+//     if (!settingController.adsStatus.value) {
 //       return;
 //     }
-//     if (controller.adsType.value == 'google') {
+//     if (settingController.adsType.value == 'google') {
 //       InterstitialAd.load(
-//         adUnitId: controller.interstitialPlacementId.value,
+//         adUnitId: settingController.interstitialPlacementId.value,
 //         request: request,
 //         adLoadCallback: InterstitialAdLoadCallback(
 //           onAdLoaded: (InterstitialAd ad) {
@@ -105,23 +124,23 @@
 //           },
 //         ),
 //       );
-//     } else if (controller.adsType.value == 'startapp') {
+//     } else if (settingController.adsType.value == 'startapp') {
 //       dd('startapp');
-//     } else if (controller.adsType.value == 'facebook') {}
+//     } else if (settingController.adsType.value == 'facebook') {}
 //   }
 
 //   static void showInterstitialAd(callback,
 //       {adControl = true, onlyOn = ''}) async {
-//     if (!controller.adsStatus.value) {
+//     if (!settingController.adsStatus.value) {
 //       callback();
 //       return;
 //     }
-//     if (!controller.showAd() && adControl) {
+//     if (!settingController.showAd() && adControl) {
 //       callback();
 //       return;
 //     }
 
-//     if (controller.adsType.value == 'google' &&
+//     if (settingController.adsType.value == 'google' &&
 //         (onlyOn == '' || onlyOn == 'google')) {
 //       if (interstitialAd == null) {
 //         if (kDebugMode) {
@@ -152,20 +171,20 @@
 //       );
 //       interstitialAd?.show();
 //       interstitialAd = null;
-//     } else if (controller.adsType.value == 'startapp' &&
+//     } else if (settingController.adsType.value == 'startapp' &&
 //         (onlyOn == '' || onlyOn == 'startapp')) {
 //       dd('startapp');
-//     } else if (controller.adsType.value == 'facebook' &&
+//     } else if (settingController.adsType.value == 'facebook' &&
 //         (onlyOn == '' || onlyOn == 'facebook')) {}
 //   }
 
 //   static void createRewardedInterstitialAd() async {
-//     if (!controller.adsStatus.value) {
+//     if (!settingController.adsStatus.value) {
 //       return;
 //     }
-//     if (controller.adsType.value == 'google') {
+//     if (settingController.adsType.value == 'google') {
 //       RewardedInterstitialAd.load(
-//         adUnitId: controller.interstitialPlacementId.value,
+//         adUnitId: settingController.interstitialPlacementId.value,
 //         request: request,
 //         rewardedInterstitialAdLoadCallback: RewardedInterstitialAdLoadCallback(
 //           onAdLoaded: (RewardedInterstitialAd ad) {
@@ -184,9 +203,9 @@
 //           },
 //         ),
 //       );
-//     } else if (controller.adsType.value == 'startapp') {
+//     } else if (settingController.adsType.value == 'startapp') {
 //       dd('startapp');
-//     } else if (controller.adsType.value == 'facebook') {}
+//     } else if (settingController.adsType.value == 'facebook') {}
 //   }
 
 //   static void showRewardedInterstitialAd(
@@ -194,16 +213,16 @@
 //       {adControl = true,
 //       onlyOn = ''}) async {
 //     RewardItem? rewardItem;
-//     if (!controller.adsStatus.value) {
+//     if (!settingController.adsStatus.value) {
 //       callback(rewardItem);
 //       return;
 //     }
-//     if (!controller.showAd() && adControl) {
+//     if (!settingController.showAd() && adControl) {
 //       callback(rewardItem);
 //       return;
 //     }
 
-//     if (controller.adsType.value == 'google' &&
+//     if (settingController.adsType.value == 'google' &&
 //         (onlyOn == '' || onlyOn == 'google')) {
 //       if (rewardedInterstitialAd == null) {
 //         dd('Warning: attempt to show interstitial before loaded.');
@@ -239,17 +258,16 @@
 //         },
 //       );
 //       rewardedInterstitialAd = null;
-//     } else if (controller.adsType.value == 'startapp' &&
+//     } else if (settingController.adsType.value == 'startapp' &&
 //         (onlyOn == '' || onlyOn == 'startapp')) {
 //       dd('startapp');
-//     } else if (controller.adsType.value == 'facebook' &&
+//     } else if (settingController.adsType.value == 'facebook' &&
 //         (onlyOn == '' || onlyOn == 'facebook')) {}
 //   }
 // }
 
 // class BannerAds extends StatelessWidget {
-//   BannerAds({Key? key}) : super(key: key);
-//   final SettingController settingController = Get.find();
+//   const BannerAds({Key? key}) : super(key: key);
 
 //   @override
 //   Widget build(BuildContext context) {
@@ -273,7 +291,6 @@
 // }
 
 // class GoogleBannerAdsState extends State<GoogleBannerAds> {
-//   SettingController settingController = Get.find();
 //   static const AdRequest request = AdRequest(
 //     keywords: <String>['foo', 'bar'],
 //     contentUrl: 'http://foo.com/bar.html',
@@ -352,8 +369,6 @@
 // }
 
 // class _InlineAdsState extends State<InlineAds> {
-//   final SettingController settingController = Get.find();
-
 //   @override
 //   Widget build(BuildContext context) {
 //     if (!settingController.adsStatus.value) {
@@ -376,7 +391,6 @@
 // }
 
 // class GoogleInlineAdsState extends State<GoogleInlineAds> {
-//   SettingController settingController = Get.find();
 //   BannerAd? _bannerAd;
 //   bool _bannerAdIsLoaded = false;
 
@@ -434,8 +448,6 @@
 // }
 
 // class _NativeAdsState extends State<NativeAds> {
-//   final SettingController settingController = Get.find();
-
 //   @override
 //   Widget build(BuildContext context) {
 //     if (!settingController.adsStatus.value) {
@@ -458,7 +470,6 @@
 // }
 
 // class _GoogleNativeAdState extends State<GoogleNativeAd> {
-//   final SettingController settingController = Get.find();
 //   NativeAd? _nativeAd;
 //   bool _nativeAdIsLoaded = false;
 
