@@ -50,4 +50,36 @@ class ApiService {
       throw Exception('No internet connection please try again!');
     }
   }
+
+  static Future<http.Response> file(
+    String url,
+    String path, {
+    String field = 'file',
+    Map<String, String> headers = const {},
+    Map<String, String> body = const {},
+  }) async {
+    var connectivityResult = await (Connectivity().checkConnectivity());
+    if (connectivityResult != ConnectivityResult.none) {
+      Uri uri = Uri.parse(url);
+
+      headers['Content-Type'] = 'application/json; charset=UTF-8';
+
+      var request = http.MultipartRequest('POST', uri);
+      request.headers.addAll(headers);
+      request.fields.addAll(body);
+      request.files.add(
+        await http.MultipartFile.fromPath(
+          field,
+          path,
+        ),
+      );
+      var streamedResponse = await request.send();
+
+      var response = await http.Response.fromStream(streamedResponse);
+
+      return response;
+    } else {
+      throw Exception('No internet connection please try again!');
+    }
+  }
 }
