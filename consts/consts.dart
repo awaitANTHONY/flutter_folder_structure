@@ -11,9 +11,13 @@ import '/controllers/setting_controller.dart';
 
 SettingController settingController = Get.find();
 
-extension SpaceXY on double {
-  SizedBox get spaceX => SizedBox(width: this);
-  SizedBox get spaceY => SizedBox(height: this);
+extension EdgeInsetsTBXY on num {
+  EdgeInsets get edgeT => EdgeInsets.only(top: toDouble());
+  EdgeInsets get edgeB => EdgeInsets.only(bottom: toDouble());
+  EdgeInsets get edgeL => EdgeInsets.only(top: toDouble());
+  EdgeInsets get edgeR => EdgeInsets.only(bottom: toDouble());
+  EdgeInsets get edgeX => EdgeInsets.symmetric(horizontal: toDouble());
+  EdgeInsets get edgeY => EdgeInsets.symmetric(vertical: toDouble());
 }
 
 extension EdgeInsetsTBXY on double {
