@@ -15,3 +15,10 @@ extension SpaceXY on double {
   SizedBox get spaceX => SizedBox(width: this);
   SizedBox get spaceY => SizedBox(height: this);
 }
+
+extension EdgeInsetsTBXY on double {
+  EdgeInsets get edgeT => EdgeInsets.only(top: this);
+  EdgeInsets get edgeB => EdgeInsets.only(bottom: this);
+  EdgeInsets get edgeX => EdgeInsets.symmetric(horizontal: this);
+  EdgeInsets get edgeY => EdgeInsets.symmetric(vertical: this);
+}
