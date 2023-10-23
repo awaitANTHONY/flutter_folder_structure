@@ -201,7 +201,7 @@ writeStorage(key, value) {
 
 dd(object, [isShowLog = false]) {
   if (kDebugMode) {
-    if (isShowLog) {
+    if (!isShowLog) {
       print(object);
     } else {
       log(object);
