@@ -1,1 +1,1 @@
-collection,http,get,url_launcher,share_plus,get_storage,connectivity_plus,fluttertoast,google_fonts,package_info_plus,hexcolor,intl,cached_network_image
+collection,http,get,url_launcher,share_plus,get_storage,connectivity_plus,fluttertoast,google_fonts,package_info_plus,hexcolor,intl,cached_network_image,chunked_uploader,dio
