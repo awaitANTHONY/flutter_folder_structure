@@ -199,12 +199,12 @@ writeStorage(key, value) {
   box.write(key, value);
 }
 
-dd(object, [isShowLog = false]) {
+dd(object, {isShowLog = false}) {
   if (kDebugMode) {
     if (!isShowLog) {
       print(object);
     } else {
-      log(object);
+      log(object.toString());
     }
   }
 }
