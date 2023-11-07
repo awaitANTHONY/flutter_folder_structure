@@ -33,6 +33,9 @@
 //           ],
 //         ),
 //       );
+//        
+//        await Future.delayed(2.seconds);
+//        requestConsent();
 //     } else if (settingController.adsType.value == 'facebook') {
 //       await Future.delayed(1.seconds);
 //       //
