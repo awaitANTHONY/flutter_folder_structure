@@ -53,10 +53,6 @@ class MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-
-    Future.delayed(5.seconds, () {
-      AdsService.requestConsent();
-    });
   }
 
   @override
