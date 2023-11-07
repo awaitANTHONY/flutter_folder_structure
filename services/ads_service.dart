@@ -1,4 +1,4 @@
-import 'package:genx_translator/consts/consts.dart';
+// import 'package:genx_translator/consts/consts.dart';
 // import 'package:google_mobile_ads/google_mobile_ads.dart';
 // import '/utils/helpers.dart';
 // import 'package:flutter/foundation.dart';
