@@ -1,47 +1,75 @@
-// import 'package:genx_translator/consts/consts.dart';
-// import 'package:google_mobile_ads/google_mobile_ads.dart';
+// import 'dart:io';
+
+// import 'package:flutter/services.dart';
+
+// import '/consts/consts.dart';
 // import '/utils/helpers.dart';
 // import 'package:flutter/foundation.dart';
 // import 'package:flutter/material.dart';
 // import 'package:get/get.dart';
+// import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 // int _numInterstitialLoadAttempts = 0;
-// int _numRewardedInterstitialLoadAttempts = 0;
 
 // class AdsService {
 //   static InterstitialAd? interstitialAd;
-//   static RewardedInterstitialAd? rewardedInterstitialAd;
-
 //   static const AdRequest request = AdRequest(
 //     keywords: <String>['foo', 'bar'],
 //     contentUrl: 'http://foo.com/bar.html',
 //     nonPersonalizedAds: true,
 //   );
 
+//   static List<String> testDeviceIds = [
+//     "e329e8b6ec873f1c51924b0e3c6687ac",
+//   ];
+
+//   // for Consent
+//   static List<String> testIdentifiers = [
+//     "B5A99A97671F816D64C05B7460B39A05",
+//   ];
+//   static const platform = MethodChannel('rootdevs.com/xml');
 //   static init() async {
-//     if (!settingController.adsStatus.value ||
-//         settingController.isSubscribed.value) return;
-//     if (settingController.adsType.value == 'google') {
-//       await MobileAds.instance.updateRequestConfiguration(
+//     await Future.delayed(1.seconds);
+//     if (!settingController.adsStatus.value) return;
+
+//     if (Platform.isAndroid) {
+//       try {
+//         final String result = await platform.invokeMethod('updateAppId', {
+//           'appId': settingController.settings.value.androidAd!.applicationId,
+//         });
+//         dd('RESULT -> $result');
+//       } on PlatformException catch (e) {
+//         dd(e);
+//       }
+
+//       //
+//       bool newOpen = readStorage('newOpen') ?? true;
+//       if (!newOpen) {
+//         MobileAds.instance.updateRequestConfiguration(
+//           RequestConfiguration(
+//             tagForChildDirectedTreatment: TagForChildDirectedTreatment.yes,
+//             testDeviceIds: testDeviceIds,
+//           ),
+//         );
+//         await Future.delayed(5.seconds);
+//         requestConsent();
+//       } else {
+//         settingController.adsStatus.value = false;
+//         writeStorage('newOpen', false);
+//       }
+//     } else {
+//       MobileAds.instance.updateRequestConfiguration(
 //         RequestConfiguration(
-//           tagForChildDirectedTreatment:
-//               TagForChildDirectedTreatment.unspecified,
-//           testDeviceIds: [
-//             "8FECD77B9178A2514A9BFB8F6DB2C99F",
-//             "AD9B79EB2D405F358FB2BDA489041B7B",
-//             "407A8A93820C155D8AF1CA6F0B746E28",
-//           ],
+//           tagForChildDirectedTreatment: TagForChildDirectedTreatment.yes,
+//           testDeviceIds: testDeviceIds,
 //         ),
 //       );
-//        
-//        await Future.delayed(2.seconds);
-//        requestConsent();
-//     } else if (settingController.adsType.value == 'facebook') {
-//       await Future.delayed(1.seconds);
-//       //
+//       await Future.delayed(5.seconds);
+//       requestConsent();
 //     }
 //   }
 
+//   //-------Consent
 //   static Future<ConsentStatus> getConsentStatus() async {
 //     var status = await ConsentInformation.instance.getConsentStatus();
 //     return status;
@@ -50,9 +78,7 @@
 //   static void requestConsent() async {
 //     ConsentDebugSettings debugSettings = ConsentDebugSettings(
 //       debugGeography: DebugGeography.debugGeographyEea,
-//       testIdentifiers: [
-//         'TEST-DEVICE-HASHED-ID',
-//       ],
+//       testIdentifiers: testIdentifiers,
 //     );
 
 //     ConsentRequestParameters params =
@@ -93,11 +119,13 @@
 //       },
 //     );
 //   }
+//   //-------- END
 
 //   static void createInterstitialAd([callback]) async {
 //     if (!settingController.adsStatus.value) {
 //       return;
 //     }
+
 //     if (settingController.adsType.value == 'google') {
 //       InterstitialAd.load(
 //         adUnitId: settingController.interstitialPlacementId.value,
@@ -180,97 +208,10 @@
 //     } else if (settingController.adsType.value == 'facebook' &&
 //         (onlyOn == '' || onlyOn == 'facebook')) {}
 //   }
-
-//   static void createRewardedInterstitialAd() async {
-//     if (!settingController.adsStatus.value) {
-//       return;
-//     }
-//     if (settingController.adsType.value == 'google') {
-//       RewardedInterstitialAd.load(
-//         adUnitId: settingController.interstitialPlacementId.value,
-//         request: request,
-//         rewardedInterstitialAdLoadCallback: RewardedInterstitialAdLoadCallback(
-//           onAdLoaded: (RewardedInterstitialAd ad) {
-//             dd('$ad loaded');
-
-//             rewardedInterstitialAd = ad;
-//             _numRewardedInterstitialLoadAttempts = 0;
-//           },
-//           onAdFailedToLoad: (LoadAdError error) {
-//             dd('RewardedInterstitialAd failed to load: $error.');
-//             _numRewardedInterstitialLoadAttempts += 1;
-//             rewardedInterstitialAd = null;
-//             if (_numRewardedInterstitialLoadAttempts <= 3) {
-//               createRewardedInterstitialAd();
-//             }
-//           },
-//         ),
-//       );
-//     } else if (settingController.adsType.value == 'startapp') {
-//       dd('startapp');
-//     } else if (settingController.adsType.value == 'facebook') {}
-//   }
-
-//   static void showRewardedInterstitialAd(
-//       Null Function(RewardItem? reward) callback,
-//       {adControl = true,
-//       onlyOn = ''}) async {
-//     RewardItem? rewardItem;
-//     if (!settingController.adsStatus.value) {
-//       callback(rewardItem);
-//       return;
-//     }
-//     if (!settingController.showAd() && adControl) {
-//       callback(rewardItem);
-//       return;
-//     }
-
-//     if (settingController.adsType.value == 'google' &&
-//         (onlyOn == '' || onlyOn == 'google')) {
-//       if (rewardedInterstitialAd == null) {
-//         dd('Warning: attempt to show interstitial before loaded.');
-
-//         callback(rewardItem);
-
-//         return;
-//       }
-//       rewardedInterstitialAd?.fullScreenContentCallback =
-//           FullScreenContentCallback(
-//         onAdShowedFullScreenContent: (RewardedInterstitialAd ad) =>
-//             dd('ad onAdShowedFullScreenContent.'),
-//         onAdDismissedFullScreenContent: (RewardedInterstitialAd ad) {
-//           dd('$ad onAdDismissedFullScreenContent.');
-//           ad.dispose();
-//           rewardedInterstitialAd = null;
-//           createRewardedInterstitialAd();
-//           callback(rewardItem);
-//         },
-//         onAdFailedToShowFullScreenContent:
-//             (RewardedInterstitialAd ad, AdError error) {
-//           dd('$ad onAdFailedToShowFullScreenContent: $error');
-//           ad.dispose();
-//           rewardedInterstitialAd = null;
-//           callback(rewardItem);
-//           createRewardedInterstitialAd();
-//         },
-//       );
-//       rewardedInterstitialAd?.show(
-//         onUserEarnedReward: (ad, reward) {
-//           rewardItem = reward;
-//           dd('$ad reward $reward');
-//         },
-//       );
-//       rewardedInterstitialAd = null;
-//     } else if (settingController.adsType.value == 'startapp' &&
-//         (onlyOn == '' || onlyOn == 'startapp')) {
-//       dd('startapp');
-//     } else if (settingController.adsType.value == 'facebook' &&
-//         (onlyOn == '' || onlyOn == 'facebook')) {}
-//   }
 // }
 
 // class BannerAds extends StatelessWidget {
-//   const BannerAds({Key? key}) : super(key: key);
+//   const BannerAds({super.key});
 
 //   @override
 //   Widget build(BuildContext context) {
@@ -287,7 +228,7 @@
 // }
 
 // class GoogleBannerAds extends StatefulWidget {
-//   const GoogleBannerAds({Key? key}) : super(key: key);
+//   const GoogleBannerAds({super.key});
 
 //   @override
 //   GoogleBannerAdsState createState() => GoogleBannerAdsState();
@@ -364,85 +305,6 @@
 //   }
 // }
 
-// class InlineAds extends StatefulWidget {
-//   const InlineAds({Key? key}) : super(key: key);
-
-//   @override
-//   State<InlineAds> createState() => _InlineAdsState();
-// }
-
-// class _InlineAdsState extends State<InlineAds> {
-//   @override
-//   Widget build(BuildContext context) {
-//     if (!settingController.adsStatus.value) {
-//       return const SizedBox();
-//     } else if (settingController.adsType.value == 'google') {
-//       return const GoogleInlineAds();
-//     } else if (settingController.adsType.value == 'startapp') {
-//       return const SizedBox();
-//     }
-
-//     return const SizedBox();
-//   }
-// }
-
-// class GoogleInlineAds extends StatefulWidget {
-//   const GoogleInlineAds({Key? key}) : super(key: key);
-
-//   @override
-//   GoogleInlineAdsState createState() => GoogleInlineAdsState();
-// }
-
-// class GoogleInlineAdsState extends State<GoogleInlineAds> {
-//   BannerAd? _bannerAd;
-//   bool _bannerAdIsLoaded = false;
-
-//   @override
-//   Widget build(BuildContext context) {
-//     final BannerAd? bannerAd = _bannerAd;
-//     if (_bannerAdIsLoaded && bannerAd != null) {
-//       return SizedBox(
-//         height: bannerAd.size.height.toDouble(),
-//         width: bannerAd.size.width.toDouble(),
-//         child: AdWidget(ad: _bannerAd!),
-//       );
-//     }
-
-//     return const SizedBox();
-//   }
-
-//   @override
-//   void didChangeDependencies() {
-//     super.didChangeDependencies();
-
-//     _bannerAd = BannerAd(
-//       adUnitId: settingController.bannerPlacementId.value,
-//       request: const AdRequest(),
-//       size: AdSize.mediumRectangle,
-//       listener: BannerAdListener(
-//         onAdLoaded: (Ad ad) {
-//           dd('$AdManagerBannerAd loaded.');
-//           setState(() {
-//             _bannerAdIsLoaded = true;
-//           });
-//         },
-//         onAdFailedToLoad: (Ad ad, LoadAdError error) {
-//           dd('$BannerAd failedToLoad: $error');
-//           ad.dispose();
-//         },
-//         onAdOpened: (Ad ad) => dd('$BannerAd onAdOpened.'),
-//         onAdClosed: (Ad ad) => dd('$BannerAd onAdClosed.'),
-//       ),
-//     )..load();
-//   }
-
-//   @override
-//   void dispose() {
-//     super.dispose();
-//     _bannerAd?.dispose();
-//   }
-// }
-
 // class NativeAds extends StatefulWidget {
 //   const NativeAds({super.key});
 
@@ -478,17 +340,12 @@
 
 //   @override
 //   Widget build(BuildContext context) {
-//     dd('native');
 //     return (_nativeAd != null && _nativeAdIsLoaded)
 //         ? Stack(
 //             children: [
 //               SizedBox(
-//                 // width: 350,
-//                 height: 350,
-//                 child: Padding(
-//                   padding: const EdgeInsets.all(8.0),
-//                   child: AdWidget(ad: _nativeAd!),
-//                 ),
+//                 height: 372,
+//                 child: AdWidget(ad: _nativeAd!),
 //               ),
 //             ],
 //           )
@@ -521,27 +378,27 @@
 //         mainBackgroundColor: Colors.white,
 //         callToActionTextStyle: NativeTemplateTextStyle(
 //           textColor: Colors.white,
-//           backgroundColor: Colors.red,
-//           style: NativeTemplateFontStyle.italic,
-//           size: 16.0,
+//           backgroundColor: Colors.blue.shade600,
+//           style: NativeTemplateFontStyle.monospace,
+//           size: 14,
 //         ),
 //         primaryTextStyle: NativeTemplateTextStyle(
-//           textColor: Colors.white,
-//           backgroundColor: Colors.blue.shade700,
-//           style: NativeTemplateFontStyle.italic,
-//           size: 16.0,
+//           textColor: Colors.black,
+//           backgroundColor: Colors.white,
+//           style: NativeTemplateFontStyle.bold,
+//           size: 14,
 //         ),
 //         secondaryTextStyle: NativeTemplateTextStyle(
-//           textColor: Colors.white,
-//           backgroundColor: Colors.green.shade600,
-//           style: NativeTemplateFontStyle.bold,
-//           size: 16.0,
+//           textColor: Colors.black54,
+//           backgroundColor: Colors.transparent,
+//           style: NativeTemplateFontStyle.italic,
+//           size: 13,
 //         ),
 //         tertiaryTextStyle: NativeTemplateTextStyle(
 //           textColor: Colors.brown,
-//           backgroundColor: Colors.amber,
+//           backgroundColor: Colors.white,
 //           style: NativeTemplateFontStyle.normal,
-//           size: 16.0,
+//           size: 15,
 //         ),
 //       ),
 //       nativeAdOptions: NativeAdOptions(
