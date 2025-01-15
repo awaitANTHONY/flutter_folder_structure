@@ -1,74 +1,76 @@
 import 'package:flutter/material.dart';
-import '/consts/consts.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'consts.dart';
 
 class AppStyles {
-  static final TextStyle text = TextStyle(
-    color: AppColors.text,
-    fontSize: AppSizes.size12,
-    fontWeight: FontWeight.normal,
+  static final small = TextStyle(
+    fontFamily: 'Open Sans',
+    fontWeight: FontWeight.w300,
+    fontSize: 12.sp,
+    color: AppColors.white,
   );
-  static final TextStyle text2 = TextStyle(
-    color: AppColors.primaryColor,
-    fontSize: AppSizes.size16,
+
+  static final medium = TextStyle(
+    fontFamily: 'Open Sans',
+    fontWeight: FontWeight.w400,
+    fontSize: 13.sp,
+  );
+
+  static final large = TextStyle(
+    fontFamily: 'Open Sans',
     fontWeight: FontWeight.w500,
+    fontSize: 14.sp,
   );
 
-  static final TextStyle heading = TextStyle(
-    color: AppColors.text,
-    fontSize: AppSizes.size20,
-    fontWeight: FontWeight.bold,
+  static final semiBold = TextStyle(
+    fontFamily: 'Open Sans',
+    fontWeight: FontWeight.w600,
+    fontSize: 14.sp,
+    color: AppColors.white,
   );
 
-  static final TextStyle heading2 = TextStyle(
-    color: AppColors.text,
-    fontSize: AppSizes.size18,
-    fontWeight: FontWeight.normal,
+  static final bold = TextStyle(
+    fontFamily: 'Open Sans',
+    fontWeight: FontWeight.w900,
+    fontSize: 14.sp,
+    color: AppColors.white,
   );
 
   static InputDecoration textInputDecoration([
     String lableText = "",
     String hintText = "",
     String prefixText = "",
+    Widget? suffix,
   ]) {
     return InputDecoration(
-      labelText: lableText,
       hintText: hintText,
-      labelStyle: const TextStyle(color: AppColors.text2),
-      hintStyle: const TextStyle(color: AppColors.text2),
+      hintStyle: TextStyle(
+        color: AppColors.blackLess,
+        fontSize: 13.sp,
+      ),
       prefixText: prefixText,
-      fillColor: Colors.white,
+      fillColor: AppColors.background,
       filled: true,
+      suffixIcon: suffix,
       contentPadding: const EdgeInsets.symmetric(
         vertical: 15,
         horizontal: 15,
       ),
       focusedBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(5.0),
-        borderSide: BorderSide(
-          color: AppColors.border,
-          width: 0.5,
-        ),
+        borderRadius: BorderRadius.circular(30),
+        borderSide: BorderSide.none,
       ),
       enabledBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(5.0),
-        borderSide: BorderSide(
-          color: AppColors.border,
-          width: 0.5,
-        ),
+        borderRadius: BorderRadius.circular(30),
+        borderSide: BorderSide.none,
       ),
       errorBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(5.0),
-        borderSide: BorderSide(
-          color: AppColors.border,
-          width: 0.5,
-        ),
+        borderRadius: BorderRadius.circular(30),
+        borderSide: BorderSide.none,
       ),
       focusedErrorBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(5.0),
-        borderSide: BorderSide(
-          color: AppColors.border,
-          width: 0.5,
-        ),
+        borderRadius: BorderRadius.circular(30),
+        borderSide: BorderSide.none,
       ),
     );
   }
@@ -76,48 +78,38 @@ class AppStyles {
   static InputDecoration phoneInputDecoration([
     String lableText = "",
     String hintText = "",
-    String prefixText = "+88",
+    String prefixText = "",
   ]) {
     return InputDecoration(
-      counterText: '',
-      labelText: lableText,
       hintText: hintText,
-      labelStyle: const TextStyle(color: AppColors.text2),
-      hintStyle: const TextStyle(color: AppColors.text2),
+      hintStyle: TextStyle(
+        color: AppColors.blackLess,
+        fontSize: 13.sp,
+        fontWeight: FontWeight.normal,
+      ),
+      counterText: '',
       prefixText: prefixText,
-      fillColor: Colors.white,
+      fillColor: AppColors.background,
       filled: true,
       contentPadding: const EdgeInsets.symmetric(
-        vertical: 15,
+        vertical: 13,
         horizontal: 15,
       ),
       focusedBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(5.0),
-        borderSide: BorderSide(
-          color: AppColors.border,
-          width: 0.5,
-        ),
+        borderRadius: BorderRadius.circular(30),
+        borderSide: BorderSide.none,
       ),
       enabledBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(5.0),
-        borderSide: BorderSide(
-          color: AppColors.border,
-          width: 0.5,
-        ),
+        borderRadius: BorderRadius.circular(30),
+        borderSide: BorderSide.none,
       ),
       errorBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(5.0),
-        borderSide: BorderSide(
-          color: AppColors.border,
-          width: 0.5,
-        ),
+        borderRadius: BorderRadius.circular(30),
+        borderSide: BorderSide.none,
       ),
       focusedErrorBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(5.0),
-        borderSide: BorderSide(
-          color: AppColors.border,
-          width: 0.5,
-        ),
+        borderRadius: BorderRadius.circular(30),
+        borderSide: BorderSide.none,
       ),
     );
   }
@@ -125,53 +117,41 @@ class AppStyles {
   static InputDecoration textInputDecoration2([
     String lableText = "",
     String hintText = "",
+    Widget? prefix,
+    Widget? suffix,
   ]) {
     return InputDecoration(
       labelText: lableText,
       hintText: hintText,
-      labelStyle: TextStyle(
-        color: AppColors.text2.withOpacity(0.6),
-        fontSize: AppSizes.size14,
+      labelStyle: const TextStyle(color: AppColors.black),
+      hintStyle: const TextStyle(
+        color: AppColors.black,
+        fontWeight: FontWeight.w300,
       ),
-      hintStyle: TextStyle(
-        color: AppColors.text2,
-        fontSize: AppSizes.size14,
-      ),
-      fillColor: Colors.transparent,
+      floatingLabelBehavior: FloatingLabelBehavior.always,
+      prefixIcon: prefix,
+      suffixIcon: suffix,
+      fillColor: Colors.white,
       filled: true,
       contentPadding: const EdgeInsets.symmetric(
-        vertical: 10,
-        horizontal: 0,
+        vertical: 15,
+        horizontal: 15,
       ),
-      focusedBorder: const UnderlineInputBorder(
-        borderSide: BorderSide(
-          color: AppColors.text2,
-          width: 0.8,
-        ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(15),
+        borderSide: BorderSide.none,
       ),
-      enabledBorder: const UnderlineInputBorder(
-        borderSide: BorderSide(
-          color: AppColors.text2,
-          width: 0.8,
-        ),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(15),
+        borderSide: BorderSide.none,
       ),
-      errorBorder: const UnderlineInputBorder(
-        borderSide: BorderSide(
-          color: AppColors.text2,
-          width: 0.8,
-        ),
+      errorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(15),
+        borderSide: BorderSide.none,
       ),
-      focusedErrorBorder: const UnderlineInputBorder(
-        borderSide: BorderSide(
-          color: AppColors.text2,
-          width: 0.8,
-        ),
-      ),
-      disabledBorder: UnderlineInputBorder(
-        borderSide: BorderSide(
-          color: AppColors.text2.withOpacity(0.3),
-          width: 0.8,
-        ),
+      focusedErrorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(15),
+        borderSide: BorderSide.none,
       ),
     );
   }
@@ -183,8 +163,8 @@ class AppStyles {
       hintText: hintText,
       isDense: true,
       hintStyle: TextStyle(
-        color: AppColors.text2,
-        fontSize: AppSizes.size13,
+        color: AppColors.black,
+        fontSize: 13.sp,
       ),
       fillColor: Colors.grey.withOpacity(0.2),
       filled: true,

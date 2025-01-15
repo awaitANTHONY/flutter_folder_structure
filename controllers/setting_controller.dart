@@ -1,9 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:findatable/services/api_services.dart';
 import 'package:flutter/services.dart';
-import '/services/api_services.dart';
 import '/consts/consts.dart';
-import '/services/vpn_service.dart';
 import '/utils/helpers.dart';
 import '/views/screens/parent_screen.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
@@ -27,9 +26,9 @@ class SettingController extends GetxController {
 
   loadData() async {
     var connectivityResult = await (Connectivity().checkConnectivity());
-    if (connectivityResult != ConnectivityResult.none) {
+    if (!connectivityResult.contains(ConnectivityResult.none)) {
       try {
-        String url = '${AppConsts.baseUrl}${AppConsts.settings}';
+        String url = '${AppConsts.baseUrl}/api/settings';
         Map<String, String> headers = {
           'X-API-KEY': AppConsts.apiKey,
         };

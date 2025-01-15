@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '/consts/consts.dart';
 
 class TextboxPhone extends StatelessWidget {
@@ -25,10 +26,10 @@ class TextboxPhone extends StatelessWidget {
         ),
         child: TextFormField(
           style: TextStyle(
-            color: AppColors.text,
-            fontSize: AppSizes.size16,
+            color: AppColors.white,
+            fontSize: 16.sp,
           ),
-          cursorColor: AppColors.primaryColor,
+          cursorColor: AppColors.primary,
           controller: controller,
           keyboardType: TextInputType.phone,
           decoration: AppStyles.phoneInputDecoration(lableText, hintText),

@@ -1,55 +1,113 @@
+import 'package:findatable/consts/consts.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '/consts/consts.dart';
-import '/controllers/setting_controller.dart';
-import '/views/screens/splash_screen.dart';
 
-main() async {
+import 'views/screens/splash_screen.dart';
+
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await GetStorage.init();
-
-  runApp(
-    GetMaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        appBarTheme: const AppBarTheme(
-          systemOverlayStyle: SystemUiOverlayStyle.light,
-        ),
-        primaryColor: AppColors.primaryColor,
-        fontFamily: GoogleFonts.hind().fontFamily,
-        colorScheme: ColorScheme.fromSwatch().copyWith(
-          secondary: AppColors.primaryColor,
-        ),
-      ),
-      title: AppTexts.appName,
-      onGenerateRoute: (settings) {
-        final routes = <String, WidgetBuilder>{
-          // PsScheduleScreen.route: (BuildContext context) =>
-          //     PsScheduleScreen(settings.arguments),
-        };
-        WidgetBuilder? builder = routes[settings.name];
-        return MaterialPageRoute(builder: (context) => builder!(context));
-      },
-      onInit: () {
-        Get.put(SettingController());
-        //Get.put(AuthController());
-      },
-      home: const MyApp(),
-    ),
-  );
+  runApp(const Main());
 }
 
-class MyApp extends StatefulWidget {
-  const MyApp({Key? key}) : super(key: key);
+class Main extends StatefulWidget {
+  const Main({super.key});
 
   @override
-  MyAppState createState() => MyAppState();
+  State<Main> createState() => _MainState();
 }
 
-class MyAppState extends State<MyApp> {
+class _MainState extends State<Main> {
+  @override
+  void initState() {
+    super.initState();
+    //set app context
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ScreenUtilInit(
+      designSize: Size(430, 920),
+      useInheritedMediaQuery: true,
+      rebuildFactor: (old, data) => true,
+      builder: (BuildContext context, __) {
+        return GetMaterialApp(
+          title: AppConsts.appName,
+          debugShowCheckedModeBanner: false,
+          home: const App(),
+          theme: ThemeData(
+            colorScheme: const ColorScheme.light().copyWith(
+              surface: AppColors.background,
+              primary: AppColors.primary,
+            ),
+            highlightColor: Colors.transparent,
+            splashColor: Colors.transparent,
+            useMaterial3: true,
+            scaffoldBackgroundColor: AppColors.transparent,
+            cardColor: Colors.white,
+            appBarTheme: AppBarTheme(
+              backgroundColor: AppColors.background,
+              surfaceTintColor: AppColors.background,
+              elevation: 1,
+              shadowColor: Colors.black.withOpacity(.2),
+            ),
+            bottomNavigationBarTheme: BottomNavigationBarThemeData(
+              backgroundColor: AppColors.background,
+              selectedItemColor: AppColors.primary,
+            ),
+            navigationBarTheme: NavigationBarThemeData(
+              backgroundColor: AppColors.background,
+              indicatorColor: AppColors.primary.withOpacity(0.8),
+              labelTextStyle: WidgetStatePropertyAll(
+                TextStyle(
+                  color: AppColors.whiteLess,
+                ),
+              ),
+              iconTheme: WidgetStatePropertyAll(
+                IconThemeData(
+                  color: AppColors.whiteLess,
+                  size: 18.sp,
+                ),
+              ),
+            ),
+            fontFamily: GoogleFonts.inter().fontFamily,
+            textTheme: TextTheme(
+              titleMedium: AppStyles.semiBold,
+              titleLarge: AppStyles.bold,
+              bodySmall: AppStyles.small,
+              bodyMedium: AppStyles.medium,
+              bodyLarge: AppStyles.large,
+              displaySmall:
+                  AppStyles.small.copyWith(color: AppColors.whiteLess),
+              displayMedium:
+                  AppStyles.medium.copyWith(color: AppColors.whiteLess),
+              displayLarge: AppStyles.large.copyWith(color: AppColors.white),
+            ),
+            iconTheme: IconThemeData(
+              size: 20.sp,
+              color: AppColors.white,
+            ),
+          ),
+          themeMode: ThemeMode.light,
+          onInit: () {},
+        );
+      },
+    );
+  }
+}
+
+//
+class App extends StatefulWidget {
+  const App({super.key});
+
+  @override
+  State<App> createState() => _AppState();
+}
+
+class _AppState extends State<App> {
   @override
   void initState() {
     super.initState();
@@ -57,9 +115,6 @@ class MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: SplashScreen(),
-    );
+    return SplashScreen();
   }
 }
-

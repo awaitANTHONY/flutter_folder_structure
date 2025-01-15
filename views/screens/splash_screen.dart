@@ -13,15 +13,6 @@ class SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: AppColors.background,
-        elevation: 0,
-        systemOverlayStyle: const SystemUiOverlayStyle(
-          statusBarColor: AppColors.background,
-          statusBarIconBrightness: Brightness.light,
-          statusBarBrightness: Brightness.dark,
-        ),
-      ),
       backgroundColor: AppColors.background,
       body: SizedBox(
         width: double.infinity,
@@ -40,9 +31,9 @@ class SplashScreenState extends State<SplashScreen> {
                 ),
               ),
             ),
-            const Center(
+            Center(
               child: CircularProgressIndicator(
-                color: AppColors.text,
+                color: AppColors.white,
               ),
             ),
             const SizedBox(

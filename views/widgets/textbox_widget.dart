@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '/consts/consts.dart';
 
 class TextboxWidget extends StatelessWidget {
@@ -34,8 +35,8 @@ class TextboxWidget extends StatelessWidget {
               title,
               style: TextStyle(
                 fontWeight: FontWeight.bold,
-                fontSize: AppSizes.size16,
-                color: AppColors.text2,
+                fontSize: 16.sp,
+                color: AppColors.white,
               ),
             ),
           ),
@@ -56,12 +57,12 @@ class TextboxWidget extends StatelessWidget {
               obscureText: isPassword,
               keyboardType: keyboardType,
               style: TextStyle(
-                color: AppColors.text,
+                color: AppColors.white,
                 fontWeight: FontWeight.bold,
-                fontSize: AppSizes.size14,
+                fontSize: 14.sp,
               ),
               decoration: AppStyles.textInputDecoration(lableText, hintText),
-              cursorColor: AppColors.primaryColor,
+              cursorColor: AppColors.primary,
               validator: (value) {
                 if (value == null || value.isEmpty) {
                   return hintText;

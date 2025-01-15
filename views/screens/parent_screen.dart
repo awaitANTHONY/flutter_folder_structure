@@ -37,13 +37,13 @@ class ParentScreenState extends State<ParentScreen> {
         elevation: 0,
         backgroundColor: AppColors.background,
         title: Text(
-          AppTexts.appName,
+          AppConsts.appName,
           style: TextStyle(
             fontFamily: GoogleFonts.carterOne().fontFamily,
           ),
         ),
         centerTitle: true,
-        systemOverlayStyle: const SystemUiOverlayStyle(
+        systemOverlayStyle: SystemUiOverlayStyle(
           statusBarColor: AppColors.background,
           statusBarIconBrightness: Brightness.light,
           statusBarBrightness: Brightness.dark,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import '/consts/consts.dart';
 
@@ -39,10 +40,10 @@ class _TextboxWidgetDatepickerState extends State<TextboxWidgetDatepicker> {
         return Theme(
           data: ThemeData.dark().copyWith(
             colorScheme: ColorScheme.light(
-              primary: AppColors.primaryColor,
+              primary: AppColors.primary,
               onPrimary: Colors.white,
-              surface: AppColors.primaryColor,
-              onSurface: AppColors.text2,
+              surface: AppColors.primary,
+              onSurface: AppColors.black,
             ),
             dialogBackgroundColor: Colors.white,
           ),
@@ -66,10 +67,10 @@ class _TextboxWidgetDatepickerState extends State<TextboxWidgetDatepicker> {
         ),
         child: TextFormField(
           style: TextStyle(
-            color: AppColors.text2,
-            fontSize: AppSizes.size16,
+            color: AppColors.black,
+            fontSize: 16.sp,
           ),
-          cursorColor: AppColors.primaryColor,
+          cursorColor: AppColors.primary,
           controller: widget.controller,
           keyboardType: TextInputType.datetime,
           readOnly: true,
@@ -80,12 +81,12 @@ class _TextboxWidgetDatepickerState extends State<TextboxWidgetDatepicker> {
             labelText: widget.lableText,
             hintText: widget.hintText,
             labelStyle: TextStyle(
-              color: AppColors.text2.withOpacity(0.6),
-              fontSize: AppSizes.size14,
+              color: AppColors.black.withOpacity(0.6),
+              fontSize: 14.sp,
             ),
             hintStyle: TextStyle(
-              color: AppColors.text2,
-              fontSize: AppSizes.size14,
+              color: AppColors.black,
+              fontSize: 14.sp,
             ),
             fillColor: Colors.white,
             filled: true,
@@ -96,8 +97,8 @@ class _TextboxWidgetDatepickerState extends State<TextboxWidgetDatepicker> {
             ),
             suffixIcon: Icon(
               Icons.date_range,
-              color: AppColors.primaryColor,
-              size: AppSizes.size16,
+              color: AppColors.primary,
+              size: 16.sp,
             ),
             suffixIconConstraints: const BoxConstraints(
               maxWidth: 30,
