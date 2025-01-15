@@ -2,8 +2,8 @@ import 'dart:convert';
 import 'package:chunked_uploader/chunked_uploader.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
+import 'package:findatable/utils/helpers.dart';
 import 'package:http/http.dart' as http;
-import '/views/utils/helpers.dart';
 
 class ApiService {
   static final http.Client _client = http.Client();
@@ -17,7 +17,7 @@ class ApiService {
     Map<String, String> headers = const {},
   }) async {
     var connectivityResult = await (Connectivity().checkConnectivity());
-    if (connectivityResult != ConnectivityResult.none) {
+    if (!connectivityResult.contains(ConnectivityResult.none)) {
       Uri uri = Uri.parse(url);
 
       headers['Content-Type'] = 'application/json; charset=UTF-8';
@@ -37,7 +37,7 @@ class ApiService {
     Map<String, dynamic> body = const {},
   }) async {
     var connectivityResult = await (Connectivity().checkConnectivity());
-    if (connectivityResult != ConnectivityResult.none) {
+    if (!connectivityResult.contains(ConnectivityResult.none)) {
       Uri uri = Uri.parse(url);
 
       headers['Content-Type'] = 'application/json; charset=UTF-8';
@@ -61,7 +61,7 @@ class ApiService {
     Map<String, String> body = const {},
   }) async {
     var connectivityResult = await (Connectivity().checkConnectivity());
-    if (connectivityResult != ConnectivityResult.none) {
+    if (!connectivityResult.contains(ConnectivityResult.none)) {
       Uri uri = Uri.parse(url);
 
       headers['Content-Type'] = 'application/json; charset=UTF-8';
@@ -93,7 +93,7 @@ class ApiService {
     Map<String, String> body = const {},
   }) async {
     var connectivityResult = await (Connectivity().checkConnectivity());
-    if (connectivityResult != ConnectivityResult.none) {
+    if (!connectivityResult.contains(ConnectivityResult.none)) {
       String fileName = path.split('/').last;
       headers['Content-Type'] = 'multipart/form-data';
       headers['Connection'] = 'Keep-Alive';
