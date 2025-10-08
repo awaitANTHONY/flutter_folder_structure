@@ -4,113 +4,156 @@ import 'consts.dart';
 
 class AppStyles {
   static final small = TextStyle(
-    fontFamily: 'Open Sans',
     fontWeight: FontWeight.w300,
-    fontSize: 12.sp,
+    fontSize: 14.sp,
+    color: AppColors.white,
+  );
+  static final regular = TextStyle(
+    fontWeight: FontWeight.normal,
+    fontSize: 15.sp,
     color: AppColors.white,
   );
 
-  static final medium = TextStyle(
-    fontFamily: 'Open Sans',
-    fontWeight: FontWeight.w400,
-    fontSize: 13.sp,
-  );
+  static final medium = TextStyle(fontWeight: FontWeight.w400, fontSize: 15.sp);
 
   static final large = TextStyle(
     fontFamily: 'Open Sans',
     fontWeight: FontWeight.w500,
-    fontSize: 14.sp,
+    fontSize: 16.sp,
   );
 
   static final semiBold = TextStyle(
-    fontFamily: 'Open Sans',
     fontWeight: FontWeight.w600,
-    fontSize: 14.sp,
+    fontSize: 16.sp,
     color: AppColors.white,
   );
 
   static final bold = TextStyle(
-    fontFamily: 'Open Sans',
     fontWeight: FontWeight.w900,
-    fontSize: 14.sp,
+    fontSize: 16.sp,
     color: AppColors.white,
   );
 
-  static InputDecoration textInputDecoration([
-    String lableText = "",
-    String hintText = "",
-    String prefixText = "",
+  static InputDecoration textInputDecoration({
+    String? lableText,
+    String? hintText,
+    Widget? prefix,
     Widget? suffix,
-  ]) {
+    String? errorText,
+    bool isEnabled = true,
+  }) {
     return InputDecoration(
       hintText: hintText,
       hintStyle: TextStyle(
-        color: AppColors.blackLess,
-        fontSize: 13.sp,
+        color: Colors.grey.withValues(alpha: 0.7),
+        fontSize: 15,
+        fontWeight: FontWeight.w300,
+        height: 1,
       ),
-      prefixText: prefixText,
-      fillColor: AppColors.background,
+      prefix: prefix,
+      fillColor: isEnabled ? Colors.white : Colors.grey[100],
       filled: true,
-      suffixIcon: suffix,
-      contentPadding: const EdgeInsets.symmetric(
-        vertical: 15,
-        horizontal: 15,
-      ),
+      suffix: suffix,
+      floatingLabelBehavior: FloatingLabelBehavior.always,
+      isDense: true,
+      contentPadding: const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
       focusedBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(30),
-        borderSide: BorderSide.none,
+        borderRadius: BorderRadius.circular(10),
+        borderSide: BorderSide(
+          color: Colors.grey.withValues(alpha: 0.5),
+          width: .5,
+        ),
       ),
       enabledBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(30),
-        borderSide: BorderSide.none,
+        borderRadius: BorderRadius.circular(10),
+        borderSide: BorderSide(
+          color: Colors.grey.withValues(alpha: 0.5),
+          width: .5,
+        ),
       ),
       errorBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(30),
-        borderSide: BorderSide.none,
+        borderRadius: BorderRadius.circular(10),
+        borderSide: BorderSide(
+          color: Colors.grey.withValues(alpha: 0.5),
+          width: .5,
+        ),
+      ),
+      disabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(10),
+        borderSide: BorderSide(
+          color: Colors.grey.withValues(alpha: 0.5),
+          width: .5,
+        ),
       ),
       focusedErrorBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(30),
-        borderSide: BorderSide.none,
+        borderRadius: BorderRadius.circular(10),
+        borderSide: BorderSide(
+          color: Colors.grey.withValues(alpha: 0.5),
+          width: .5,
+        ),
       ),
+      errorText: errorText,
     );
   }
 
-  static InputDecoration phoneInputDecoration([
-    String lableText = "",
-    String hintText = "",
-    String prefixText = "",
-  ]) {
+  static InputDecoration phoneInputDecoration({
+    String? lableText,
+    String? hintText,
+    Widget? prefix,
+    Widget? suffix,
+    String? errorText,
+    bool isReadOnly = false,
+  }) {
     return InputDecoration(
       hintText: hintText,
       hintStyle: TextStyle(
-        color: AppColors.blackLess,
-        fontSize: 13.sp,
-        fontWeight: FontWeight.normal,
+        color: Colors.grey.withValues(alpha: 0.7),
+        fontSize: 14.0,
+        fontWeight: FontWeight.w300,
       ),
-      counterText: '',
-      prefixText: prefixText,
-      fillColor: AppColors.background,
+      prefixIcon: prefix,
+      fillColor: isReadOnly ? Colors.grey[200] : Colors.white,
       filled: true,
-      contentPadding: const EdgeInsets.symmetric(
-        vertical: 13,
-        horizontal: 15,
-      ),
+      suffixIcon: suffix,
+      floatingLabelBehavior: FloatingLabelBehavior.always,
+      isDense: true,
+      contentPadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 0),
       focusedBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(30),
-        borderSide: BorderSide.none,
+        borderRadius: BorderRadius.circular(10),
+        borderSide: BorderSide(
+          color: Colors.grey.withValues(alpha: 0.5),
+          width: .5,
+        ),
       ),
       enabledBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(30),
-        borderSide: BorderSide.none,
+        borderRadius: BorderRadius.circular(10),
+        borderSide: BorderSide(
+          color: Colors.grey.withValues(alpha: 0.5),
+          width: .5,
+        ),
       ),
       errorBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(30),
-        borderSide: BorderSide.none,
+        borderRadius: BorderRadius.circular(10),
+        borderSide: BorderSide(
+          color: Colors.grey.withValues(alpha: 0.5),
+          width: .5,
+        ),
+      ),
+      disabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(10),
+        borderSide: BorderSide(
+          color: Colors.grey.withValues(alpha: 0.5),
+          width: .5,
+        ),
       ),
       focusedErrorBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(30),
-        borderSide: BorderSide.none,
+        borderRadius: BorderRadius.circular(10),
+        borderSide: BorderSide(
+          color: Colors.grey.withValues(alpha: 0.5),
+          width: .5,
+        ),
       ),
+      errorText: errorText,
     );
   }
 
@@ -133,10 +176,7 @@ class AppStyles {
       suffixIcon: suffix,
       fillColor: Colors.white,
       filled: true,
-      contentPadding: const EdgeInsets.symmetric(
-        vertical: 15,
-        horizontal: 15,
-      ),
+      contentPadding: const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(15),
         borderSide: BorderSide.none,
@@ -156,22 +196,14 @@ class AppStyles {
     );
   }
 
-  static InputDecoration textInputDecoration3([
-    String hintText = "",
-  ]) {
+  static InputDecoration textInputDecoration3([String hintText = ""]) {
     return InputDecoration(
       hintText: hintText,
       isDense: true,
-      hintStyle: TextStyle(
-        color: AppColors.black,
-        fontSize: 13.sp,
-      ),
-      fillColor: Colors.grey.withOpacity(0.2),
+      hintStyle: TextStyle(color: AppColors.black, fontSize: 14.sp),
+      fillColor: Colors.grey.withOpacity2(0.2),
       filled: true,
-      contentPadding: const EdgeInsets.symmetric(
-        vertical: 10,
-        horizontal: 15,
-      ),
+      contentPadding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(5.0),
         borderSide: BorderSide.none,
@@ -192,12 +224,14 @@ class AppStyles {
   }
 
   static BoxDecoration inputBoxDecorationShaddow() {
-    return BoxDecoration(boxShadow: [
-      BoxShadow(
-        color: Colors.black.withOpacity(0.1),
-        blurRadius: 20,
-        offset: const Offset(0, 5),
-      )
-    ]);
+    return BoxDecoration(
+      boxShadow: [
+        BoxShadow(
+          color: Colors.black.withOpacity2(0.1),
+          blurRadius: 20,
+          offset: const Offset(0, 5),
+        ),
+      ],
+    );
   }
 }

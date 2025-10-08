@@ -1,13 +1,14 @@
+import 'package:findatable_restaurant/consts/consts.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 
 class AppColors {
-  static final Color primary = HexColor('#000000');
+  static final Color primary = Color.fromRGBO(0, 128, 113, 1);
   static const Color white = Colors.white;
-  static Color whiteLess = Colors.white.withOpacity(.75);
+  static Color whiteLess = Colors.white.withOpacity2(.75);
   static const Color black = Colors.black;
-  static Color blackLess = Colors.black.withOpacity(.8);
-  static final Color border = Colors.grey.withOpacity(0.5);
-  static final Color background = Color.fromRGBO(9, 44, 47, 1);
+  static final Color blackLess = Colors.black.withOpacity2(.7);
+  static final Color border = Colors.grey.withOpacity2(0.5);
+  static final Color background = HexColor('#F5F5F7');
   static final Color transparent = Colors.transparent;
 }

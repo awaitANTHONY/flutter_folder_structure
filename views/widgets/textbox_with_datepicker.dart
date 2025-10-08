@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import '/consts/consts.dart';
 
 class TextboxWidgetDatepicker extends StatefulWidget {
   const TextboxWidgetDatepicker({
-    Key? key,
+    super.key,
     required this.controller,
     this.hintText = '',
     this.lableText = '',
     this.initialDate,
     this.firstDate,
     this.lastDate,
-  }) : super(key: key);
+  });
 
   final TextEditingController controller;
   final String lableText;
@@ -33,7 +32,8 @@ class _TextboxWidgetDatepickerState extends State<TextboxWidgetDatepicker> {
       initialDate: widget.controller.text == ''
           ? widget.initialDate ?? DateTime.now()
           : DateFormat("yyyy-MM-dd").parse(widget.controller.text),
-      firstDate: widget.firstDate ??
+      firstDate:
+          widget.firstDate ??
           DateTime.now().add(const Duration(days: -(350 * 100))),
       lastDate: widget.lastDate ?? DateTime.now(),
       builder: (BuildContext context, Widget? child) {
@@ -66,10 +66,7 @@ class _TextboxWidgetDatepickerState extends State<TextboxWidgetDatepicker> {
           //color: Colors.grey.shade300,
         ),
         child: TextFormField(
-          style: TextStyle(
-            color: AppColors.black,
-            fontSize: 16.sp,
-          ),
+          style: TextStyle(color: AppColors.black, fontSize: 16.sp),
           cursorColor: AppColors.primary,
           controller: widget.controller,
           keyboardType: TextInputType.datetime,
@@ -81,13 +78,10 @@ class _TextboxWidgetDatepickerState extends State<TextboxWidgetDatepicker> {
             labelText: widget.lableText,
             hintText: widget.hintText,
             labelStyle: TextStyle(
-              color: AppColors.black.withOpacity(0.6),
+              color: AppColors.black.withValues(alpha: 0.6),
               fontSize: 14.sp,
             ),
-            hintStyle: TextStyle(
-              color: AppColors.black,
-              fontSize: 14.sp,
-            ),
+            hintStyle: TextStyle(color: AppColors.black, fontSize: 14.sp),
             fillColor: Colors.white,
             filled: true,
             isDense: true,
@@ -105,38 +99,23 @@ class _TextboxWidgetDatepickerState extends State<TextboxWidgetDatepicker> {
               minWidth: 30,
             ),
             focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(
-                color: AppColors.border,
-                width: 0.8,
-              ),
+              borderSide: BorderSide(color: AppColors.border, width: 0.8),
               borderRadius: BorderRadius.circular(8.0),
             ),
             enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(
-                color: AppColors.border,
-                width: 0.8,
-              ),
+              borderSide: BorderSide(color: AppColors.border, width: 0.8),
               borderRadius: BorderRadius.circular(8.0),
             ),
             errorBorder: OutlineInputBorder(
-              borderSide: BorderSide(
-                color: AppColors.border,
-                width: 0.8,
-              ),
+              borderSide: BorderSide(color: AppColors.border, width: 0.8),
               borderRadius: BorderRadius.circular(8.0),
             ),
             focusedErrorBorder: OutlineInputBorder(
-              borderSide: BorderSide(
-                color: AppColors.border,
-                width: 0.8,
-              ),
+              borderSide: BorderSide(color: AppColors.border, width: 0.8),
               borderRadius: BorderRadius.circular(8.0),
             ),
             disabledBorder: UnderlineInputBorder(
-              borderSide: BorderSide(
-                color: AppColors.border,
-                width: 0.8,
-              ),
+              borderSide: BorderSide(color: AppColors.border, width: 0.8),
               borderRadius: BorderRadius.circular(8.0),
             ),
           ),

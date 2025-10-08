@@ -10,7 +10,15 @@ import 'views/screens/splash_screen.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await GetStorage.init();
-  runApp(const Main());
+
+  runApp(
+    GestureDetector(
+      onTap: () {
+        FocusManager.instance.primaryFocus?.unfocus();
+      },
+      child: const Main(),
+    ),
+  );
 }
 
 class Main extends StatefulWidget {
@@ -49,30 +57,48 @@ class _MainState extends State<Main> {
             scaffoldBackgroundColor: AppColors.transparent,
             cardColor: Colors.white,
             appBarTheme: AppBarTheme(
-              backgroundColor: AppColors.background,
-              surfaceTintColor: AppColors.background,
+              backgroundColor: AppColors.primary,
+              surfaceTintColor: AppColors.primary,
               elevation: 1,
-              shadowColor: Colors.black.withOpacity(.2),
+              iconTheme: IconThemeData(size: 20.sp, color: AppColors.white),
+              actionsIconTheme: IconThemeData(
+                size: 20.sp,
+                color: AppColors.white,
+              ),
+              shadowColor: Colors.black.withValues(alpha: .2),
             ),
+            navigationBarTheme: NavigationBarThemeData(
+              elevation: 1,
+              backgroundColor: AppColors.background,
+              indicatorColor: AppColors.primary.withValues(alpha: 0.8),
+              labelTextStyle: WidgetStatePropertyAll(
+                TextStyle(color: AppColors.blackLess),
+              ),
+              iconTheme: WidgetStateProperty.resolveWith((states) {
+                if (states.contains(WidgetState.selected)) {
+                  return IconThemeData(color: Colors.white, size: 22.sp);
+                }
+                return IconThemeData(color: AppColors.blackLess, size: 22.sp);
+              }),
+            ),
+
             bottomNavigationBarTheme: BottomNavigationBarThemeData(
               backgroundColor: AppColors.background,
               selectedItemColor: AppColors.primary,
-            ),
-            navigationBarTheme: NavigationBarThemeData(
-              backgroundColor: AppColors.background,
-              indicatorColor: AppColors.primary.withOpacity(0.8),
-              labelTextStyle: WidgetStatePropertyAll(
-                TextStyle(
-                  color: AppColors.whiteLess,
-                ),
+              unselectedItemColor: AppColors.blackLess,
+              selectedLabelStyle: AppStyles.semiBold.copyWith(fontSize: 12.sp),
+              unselectedLabelStyle: AppStyles.medium.copyWith(fontSize: 12.sp),
+              type: BottomNavigationBarType.fixed,
+              selectedIconTheme: IconThemeData(
+                size: 22.sp,
+                color: AppColors.primary,
               ),
-              iconTheme: WidgetStatePropertyAll(
-                IconThemeData(
-                  color: AppColors.whiteLess,
-                  size: 18.sp,
-                ),
+              unselectedIconTheme: IconThemeData(
+                size: 20.sp,
+                color: AppColors.blackLess,
               ),
             ),
+
             fontFamily: GoogleFonts.inter().fontFamily,
             textTheme: TextTheme(
               titleMedium: AppStyles.semiBold,
@@ -80,19 +106,25 @@ class _MainState extends State<Main> {
               bodySmall: AppStyles.small,
               bodyMedium: AppStyles.medium,
               bodyLarge: AppStyles.large,
-              displaySmall:
-                  AppStyles.small.copyWith(color: AppColors.whiteLess),
-              displayMedium:
-                  AppStyles.medium.copyWith(color: AppColors.whiteLess),
+
+              displaySmall: AppStyles.small.copyWith(
+                color: AppColors.whiteLess,
+              ),
+              displayMedium: AppStyles.medium.copyWith(
+                color: AppColors.whiteLess,
+              ),
               displayLarge: AppStyles.large.copyWith(color: AppColors.white),
             ),
-            iconTheme: IconThemeData(
-              size: 20.sp,
-              color: AppColors.white,
+            floatingActionButtonTheme: FloatingActionButtonThemeData(
+              backgroundColor: AppColors.primary,
+              foregroundColor: Colors.white,
             ),
+            iconTheme: IconThemeData(size: 20.sp, color: AppColors.white),
           ),
           themeMode: ThemeMode.light,
-          onInit: () {},
+          onInit: () {
+            Get.put(SettingController(), permanent: true);
+          },
         );
       },
     );

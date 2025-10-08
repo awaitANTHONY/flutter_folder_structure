@@ -1,6 +1,7 @@
 export './app_colors.dart';
 export './app_consts.dart';
 export './app_styles.dart';
+export 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -11,6 +12,10 @@ SettingController settingController = Get.find();
 extension SpaceXY on num {
   SizedBox get spaceX => SizedBox(width: toDouble());
   SizedBox get spaceY => SizedBox(height: toDouble());
+}
+
+extension ColorEx on Color {
+  Color withOpacity2(double opacity) => withValues(alpha: opacity);
 }
 
 extension EdgeInsetsTBXY on num {
