@@ -120,12 +120,12 @@ class _TextboxWidgetAutocompleteState<T>
                   TextSpan(
                     text: ' *',
                     style: TextStyle(fontSize: 15.sp, color: Colors.red),
-                  )
-                else
-                  TextSpan(
-                    text: ' (optional)',
-                    style: TextStyle(fontSize: 15.sp, color: Colors.red),
                   ),
+                // else
+                //   TextSpan(
+                //     text: ' (optional)',
+                //     style: TextStyle(fontSize: 15.sp, color: Colors.red),
+                //   ),
               ],
             ),
           ),

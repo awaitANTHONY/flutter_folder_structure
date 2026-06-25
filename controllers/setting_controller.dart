@@ -1,7 +1,5 @@
-import 'dart:convert';
 import 'dart:io';
-import 'package:findatable/services/api_services.dart';
-import 'package:flutter/services.dart';
+import '/services/api_services.dart';
 import '/consts/consts.dart';
 import '/utils/helpers.dart';
 import '/views/screens/parent_screen.dart';
@@ -24,25 +22,23 @@ class SettingController extends GetxController {
   RxInt sliderIndex = 0.obs;
   Rxn<PackageInfo> appInfo = Rxn<PackageInfo>().obs();
 
-  loadData() async {
+  Future<void> loadData() async {
     var connectivityResult = await (Connectivity().checkConnectivity());
     if (!connectivityResult.contains(ConnectivityResult.none)) {
       try {
         String url = '${AppConsts.baseUrl}/api/settings';
-        Map<String, String> headers = {
-          'X-API-KEY': AppConsts.apiKey,
-        };
+        Map<String, String> headers = {'X-API-KEY': AppConsts.apiKey};
         Map<String, dynamic> body = {
           'platform': Platform.isIOS ? 'ios' : 'android',
         };
-        var response = await ApiService.post(
+        var response = await ApiService.request(
           url,
           headers: headers,
           body: body,
         );
 
-        var jsonString = response.body;
-        var responseModel = Setting.fromJson(jsonDecode(jsonString));
+        var json = response.data;
+        var responseModel = Setting.fromJson(json);
 
         if (responseModel.status == true) {
           store(responseModel);
@@ -113,30 +109,6 @@ class SettingController extends GetxController {
       }
     }
     return false;
-  }
-
-  static const platform = MethodChannel('await/xml');
-  Future<void> onInitApp(id) async {
-    // if (Platform.isAndroid) {
-    //   try {
-    //     final String result = await platform.invokeMethod('updateAppId', {
-    //       'appId': id,
-    //     });
-    //     dd('RESULT -> $result');
-    //   } on PlatformException catch (e) {
-    //     dd(e);
-    //   }
-    // }
-
-    // WidgetsFlutterBinding.ensureInitialized();
-    // MobileAds.instance.updateRequestConfiguration(
-    //   RequestConfiguration(
-    //     tagForChildDirectedTreatment: TagForChildDirectedTreatment.unspecified,
-    //     testDeviceIds: <String>[
-    //       "8FECD77B9178A2514A9BFB8F6DB2C99F",
-    //     ],
-    //   ),
-    // );
   }
 
   // void checkVersion() async {

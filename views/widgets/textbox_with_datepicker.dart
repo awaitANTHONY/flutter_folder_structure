@@ -26,7 +26,7 @@ class TextboxWidgetDatepicker extends StatefulWidget {
 }
 
 class _TextboxWidgetDatepickerState extends State<TextboxWidgetDatepicker> {
-  _selectDate(BuildContext context) async {
+  Future<void> _selectDate(BuildContext context) async {
     final DateTime? selected = await showDatePicker(
       context: context,
       initialDate: widget.controller.text == ''
@@ -44,8 +44,7 @@ class _TextboxWidgetDatepickerState extends State<TextboxWidgetDatepicker> {
               onPrimary: Colors.white,
               surface: AppColors.primary,
               onSurface: AppColors.black,
-            ),
-            dialogBackgroundColor: Colors.white,
+            ), dialogTheme: DialogThemeData(backgroundColor: Colors.white),
           ),
           child: child!,
         );

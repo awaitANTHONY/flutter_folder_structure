@@ -112,6 +112,7 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
           name: fieldName,
           initialValue: widget.initialValue,
           maxImages: widget.maxImages,
+
           transformImageWidget: (context, displayImage) => Center(
             child: Container(
               width: widget.maxImages != 1 ? 120.w : null,

@@ -10,6 +10,7 @@ class TextboxWidget extends StatefulWidget {
     super.key,
     required this.title,
     this.fieldName,
+    this.initialValue,
     this.keyboardType = TextInputType.name,
     this.isPassword = false,
     this.hintText = '',
@@ -32,6 +33,7 @@ class TextboxWidget extends StatefulWidget {
 
   final String title;
   final String? fieldName;
+  final String? initialValue;
   final bool isPassword;
   final TextInputType keyboardType;
   final String lableText;
@@ -89,68 +91,73 @@ class _TextboxWidgetState extends State<TextboxWidget> {
                 TextSpan(
                   text: ' *',
                   style: TextStyle(fontSize: 15.sp, color: Colors.red),
-                )
-              else
-                TextSpan(
-                  text: ' (optional)',
-                  style: TextStyle(fontSize: 15.sp, color: Colors.red),
                 ),
+              // else
+              //   TextSpan(
+              //     text: ' (optional)',
+              //     style: TextStyle(fontSize: 15.sp, color: Colors.red),
+              //   ),
             ],
           ),
         ),
         10.verticalSpace,
-        FormBuilderTextField(
-          name: fieldName,
-          obscureText: isObscureText,
-          keyboardType: widget.keyboardType,
-          controller: widget.controller,
-          enabled: widget.isEnabled,
-          readOnly: widget.isReadOnly,
-          maxLength: widget.maxLength,
-          maxLines: widget.maxLines ?? (widget.isPassword ? 1 : null),
-          minLines: widget.minLines,
-          inputFormatters: [
-            if (widget.keyboardType == TextInputType.number)
-              FilteringTextInputFormatter.digitsOnly,
-            if (widget.inputFormatters != null) ...widget.inputFormatters!,
-          ],
-          style: TextStyle(
-            color: AppColors.black,
-            fontWeight: FontWeight.w500,
-            fontSize: 14.sp,
-            height: 1,
+        Container(
+          width: double.infinity,
+          alignment: Alignment.center,
+          child: FormBuilderTextField(
+            name: fieldName,
+            initialValue: widget.initialValue,
+            obscureText: isObscureText,
+            keyboardType: widget.keyboardType,
+            controller: widget.controller,
+            enabled: widget.isEnabled,
+            readOnly: widget.isReadOnly,
+            maxLength: widget.maxLength,
+            maxLines: widget.maxLines ?? (widget.isPassword ? 1 : null),
+            minLines: widget.minLines,
+            inputFormatters: [
+              if (widget.keyboardType == TextInputType.number)
+                FilteringTextInputFormatter.digitsOnly,
+              if (widget.inputFormatters != null) ...widget.inputFormatters!,
+            ],
+            style: TextStyle(
+              color: AppColors.black,
+              fontWeight: FontWeight.w500,
+              fontSize: 14.sp,
+              height: 1,
+            ),
+            decoration: AppStyles.textInputDecoration(
+              lableText: widget.lableText,
+              hintText: (widget.hintText),
+              prefix: widget.prefix,
+              suffix: widget.isPassword
+                  ? InkWell(
+                      onTap: () {
+                        setState(() {
+                          isObscureText = !isObscureText;
+                        });
+                      },
+                      child: Icon(
+                        isObscureText ? Icons.visibility_off : Icons.visibility,
+                        color: AppColors.black.withValues(alpha: 0.5),
+                        size: 18.sp,
+                      ),
+                    )
+                  : widget.suffix,
+              errorText: widget.externalErrorText,
+              isEnabled: widget.isEnabled,
+            ),
+            cursorColor: AppColors.primary,
+            validator: FormBuilderValidators.compose([
+              if (widget.isRequired)
+                FormBuilderValidators.required(
+                  errorText: lang('This field is required'),
+                ),
+              if (widget.customValidator != null) widget.customValidator!,
+            ]),
+            onChanged: widget.onChanged,
+            onTap: widget.onTap,
           ),
-          decoration: AppStyles.textInputDecoration(
-            lableText: widget.lableText,
-            hintText: lang(widget.hintText),
-            prefix: widget.prefix,
-            suffix: widget.isPassword
-                ? InkWell(
-                    onTap: () {
-                      setState(() {
-                        isObscureText = !isObscureText;
-                      });
-                    },
-                    child: Icon(
-                      isObscureText ? Icons.visibility_off : Icons.visibility,
-                      color: AppColors.black.withValues(alpha: 0.5),
-                      size: 18.sp,
-                    ),
-                  )
-                : widget.suffix,
-            errorText: widget.externalErrorText,
-            isEnabled: widget.isEnabled,
-          ),
-          cursorColor: AppColors.primary,
-          validator: FormBuilderValidators.compose([
-            if (widget.isRequired)
-              FormBuilderValidators.required(
-                errorText: lang('This field is required'),
-              ),
-            if (widget.customValidator != null) widget.customValidator!,
-          ]),
-          onChanged: widget.onChanged,
-          onTap: widget.onTap,
         ),
       ],
     );

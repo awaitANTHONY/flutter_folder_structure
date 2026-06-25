@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:form_builder_phone_field/form_builder_phone_field.dart';
+import 'package:intl_phone_field/intl_phone_field.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:flutter/services.dart';
-import '/utils/helpers.dart';
 import '/consts/consts.dart';
 
 class TextboxPhoneWidget extends StatefulWidget {
@@ -22,6 +22,7 @@ class TextboxPhoneWidget extends StatefulWidget {
     this.isReadOnly = false,
     this.externalErrorText,
     this.onChanged,
+    this.initialValue,
   });
 
   final String title;
@@ -38,6 +39,7 @@ class TextboxPhoneWidget extends StatefulWidget {
   final bool isReadOnly;
   final String? externalErrorText;
   final void Function(String?)? onChanged;
+  final String? initialValue;
 
   @override
   State<TextboxPhoneWidget> createState() => _TextboxPhoneWidgetState();
@@ -56,6 +58,7 @@ class _TextboxPhoneWidgetState extends State<TextboxPhoneWidget> {
   @override
   Widget build(BuildContext context) {
     final fieldName = widget.fieldName ?? getFieldName(widget.title);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -86,34 +89,54 @@ class _TextboxPhoneWidgetState extends State<TextboxPhoneWidget> {
         10.verticalSpace,
         Container(
           decoration: BoxDecoration(borderRadius: BorderRadius.circular(5)),
-          child: FormBuilderPhoneField(
+          child: FormBuilderField<String>(
             name: fieldName,
-            controller: widget.controller,
-            enabled: !widget.isReadOnly,
-            style: TextStyle(
-              color: AppColors.black,
-              fontWeight: FontWeight.w500,
-              fontSize: 14.sp,
-            ),
-            decoration: AppStyles.phoneInputDecoration(
-              lableText: widget.lableText,
-              hintText: widget.hintText,
-              prefix: widget.prefix,
-              suffix: widget.suffix,
-              errorText: widget.externalErrorText,
-              isReadOnly: widget.isReadOnly,
-            ),
-            cursorColor: AppColors.primary,
-            priorityListByIsoCode: const ['NL', 'GB', 'FR', 'DE', 'IN'],
             validator: FormBuilderValidators.compose([
               if (widget.isRequired)
                 FormBuilderValidators.required(
-                  errorText: lang('This field is required'),
+                  errorText: 'This field is required',
                 ),
-              FormBuilderValidators.numeric(),
               if (widget.customValidator != null) widget.customValidator!,
             ]),
-            onChanged: widget.onChanged,
+            builder: (FormFieldState<String> field) {
+              return IntlPhoneField(
+                controller: widget.controller,
+                enabled: !widget.isReadOnly,
+                style: TextStyle(
+                  color: AppColors.black,
+                  fontWeight: FontWeight.w500,
+                  fontSize: 14.sp,
+                ),
+                flagsButtonPadding: EdgeInsets.only(left: 10.sp, right: 0.sp),
+                decoration: AppStyles.phoneInputDecoration(
+                  lableText: widget.lableText,
+                  hintText: widget.hintText,
+                  prefix: widget.prefix,
+                  suffix: widget.suffix,
+                  errorText: field.errorText ?? widget.externalErrorText,
+                  isReadOnly: widget.isReadOnly,
+                ).copyWith(errorText: field.errorText),
+                initialValue: field.value,
+                dropdownIconPosition: IconPosition.leading,
+                dropdownIcon: Icon(
+                  Icons.arrow_drop_down,
+                  color: AppColors.black,
+                  size: 20.sp,
+                ),
+                onChanged: (phone) {
+                  final completeNumber = phone.completeNumber;
+
+                  field.didChange(completeNumber);
+
+                  if (widget.onChanged != null) {
+                    widget.onChanged!(completeNumber);
+                  }
+                },
+                onCountryChanged: (country) {
+                  //
+                },
+              );
+            },
           ),
         ),
       ],

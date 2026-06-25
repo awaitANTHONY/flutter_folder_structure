@@ -1,10 +1,10 @@
-import 'package:findatable/consts/consts.dart';
+import '/consts/consts.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import 'controllers/setting_controller.dart';
 import 'views/screens/splash_screen.dart';
 
 void main() async {
@@ -38,9 +38,11 @@ class _MainState extends State<Main> {
   @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(
-      designSize: Size(430, 920),
+      designSize: isTablet(context)
+          ? const Size(900, 1200)
+          : const Size(430, 920),
       useInheritedMediaQuery: true,
-      rebuildFactor: (old, data) => true,
+      rebuildFactor: (old, data) => RebuildFactors.size(old, data),
       builder: (BuildContext context, __) {
         return GetMaterialApp(
           title: AppConsts.appName,

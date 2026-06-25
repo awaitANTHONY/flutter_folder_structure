@@ -1,3 +1,5 @@
+import 'package:get/get_utils/src/extensions/string_extensions.dart';
+
 import '/consts/consts.dart';
 import '/utils/helpers.dart';
 import 'package:flutter/material.dart';
@@ -17,7 +19,7 @@ class StatusWidget extends StatelessWidget {
           borderRadius: BorderRadius.circular(8),
         ),
         child: Text(
-          lang(status),
+          lang(status).capitalize!,
           style: TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.bold,
@@ -29,13 +31,17 @@ class StatusWidget extends StatelessWidget {
   }
 
   Color _getStatusColor(String status) {
-    switch (status) {
+    switch (status.toLowerCase()) {
       case 'confirmed':
+      case 'active':
         return Colors.green;
       case 'pending':
         return Colors.orange;
       case 'cancelled':
         return Colors.red;
+      case 'inactive':
+      case 'in-active':
+        return Colors.grey;
       default:
         return Colors.blueGrey;
     }

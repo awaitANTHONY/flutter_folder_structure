@@ -5,6 +5,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:mime/mime.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:chunked_uploader/chunked_uploader.dart';
+import 'package:path_provider/path_provider.dart';
 import '/utils/helpers.dart';
 import '/consts/consts.dart';
 
@@ -200,6 +201,64 @@ class ApiService {
     return response!;
   }
 
+  static Future<String?> download(
+    String url, {
+    String? fileName,
+    String? directoryPath,
+    Map<String, String> headers = const {},
+    void Function(double progress)? onProgress,
+    bool showingErrors = true,
+  }) async {
+    await _checkConnectivity();
+    headers = await _buildHeaders(headers);
+
+    try {
+      Directory? directory;
+      if (directoryPath != null && directoryPath.isNotEmpty) {
+        directory = Directory(directoryPath);
+        if (!await directory.exists()) {
+          await directory.create(recursive: true);
+        }
+      } else {
+        if (Platform.isAndroid) {
+          directory = await getExternalStorageDirectory();
+        } else {
+          directory = await getApplicationDocumentsDirectory();
+        }
+      }
+
+      if (directory == null) {
+        if (showingErrors) {
+          showToast('Unable to access storage', type: ToastType.error);
+        }
+        return null;
+      }
+
+      String filePath = fileName != null
+          ? '${directory.path}/$fileName'
+          : '${directory.path}/${url.split('/').last}';
+
+      await _dio.download(
+        url,
+        filePath,
+        options: Options(headers: headers),
+        onReceiveProgress: (received, total) {
+          if (total != -1) {
+            final progress = received / total;
+            onProgress?.call(progress);
+          }
+        },
+      );
+
+      return filePath;
+    } on DioException catch (e) {
+      if (showingErrors) {
+        _handleDioError(e);
+      }
+      rethrow;
+    }
+  }
+
   static Future<void> _checkConnectivity() async {
     final connectivityResult = await Connectivity().checkConnectivity();
     if (connectivityResult.contains(ConnectivityResult.none)) {
@@ -272,7 +331,11 @@ class ApiService {
     } else if (e.response != null) {
       final data = e.response?.data;
 
-      // dd('error response : $data', isShowLog: true, doCopy: true);
+      dd(
+        'error response : $data url ${e.requestOptions.uri}',
+        isShowLog: true,
+        doCopy: false,
+      );
 
       if (data is Map<String, dynamic>) {
         showErrors(data);

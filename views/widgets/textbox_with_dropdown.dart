@@ -2,7 +2,7 @@ import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
-import 'package:findatable_restaurant/utils/helpers.dart';
+import '/utils/helpers.dart';
 import '/consts/consts.dart';
 
 class DropdownOption {
@@ -44,6 +44,7 @@ class TextboxWidgetDropdown extends StatefulWidget {
     this.isMultiSelect = false,
     this.initialValues,
     this.onMultiChange,
+    this.isReadOnly = false,
   }) : assert(
          items != null || options != null,
          'Either items or options must be provided',
@@ -66,6 +67,7 @@ class TextboxWidgetDropdown extends StatefulWidget {
   final List<String>? initialValues; // Initial values for multi-select
   final Function(List<String> values)?
   onMultiChange; // Callback for multi-select changes
+  final bool isReadOnly; // Disable interaction when true
 
   @override
   State<TextboxWidgetDropdown> createState() => _TextboxWidgetDropdownState();
@@ -145,16 +147,16 @@ class _TextboxWidgetDropdownState extends State<TextboxWidgetDropdown> {
                 TextSpan(
                   text: ' *',
                   style: TextStyle(fontSize: 15.sp, color: Colors.red),
-                )
-              else
-                TextSpan(
-                  text: ' (optional)',
-                  style: TextStyle(fontSize: 15.sp, color: Colors.red),
                 ),
+              // else
+              //   TextSpan(
+              //     text: ' (optional)',
+              //     style: TextStyle(fontSize: 15.sp, color: Colors.red),
+              //   ),
             ],
           ),
         ),
-        10.spaceY,
+        10.verticalSpace,
         widget.isMultiSelect
             ? _buildMultiSelectField(fieldName, options)
             : _buildSingleSelectField(fieldName, options, selectedItem),
@@ -178,7 +180,6 @@ class _TextboxWidgetDropdownState extends State<TextboxWidgetDropdown> {
         if (widget.customValidator != null) widget.customValidator!,
       ]),
       builder: (FormFieldState<String?> field) {
-        // Find the selected option based on the current value
         DropdownOption? currentSelectedOption;
         if (selectedItem != null) {
           try {
@@ -192,119 +193,131 @@ class _TextboxWidgetDropdownState extends State<TextboxWidgetDropdown> {
         }
 
         return DropdownSearch<DropdownOption>(
+          items: (filter, _) => options,
+          selectedItem: currentSelectedOption,
+          enabled: !widget.isReadOnly,
           dropdownBuilder: (context, selectedOption) {
+            final hasValue = selectedOption != null;
             return Text(
-              selectedOption?.label ?? '',
+              hasValue ? selectedOption.label : (widget.lableText ?? ''),
               style: TextStyle(
-                color: AppColors.black,
-                fontWeight: FontWeight.w500,
+                color: hasValue ? AppColors.black : Colors.grey[400],
+                fontWeight: hasValue ? FontWeight.w500 : FontWeight.w400,
                 fontSize: 15.sp,
               ),
             );
           },
-          showClearButton: widget.showClearButton,
-          clearButtonBuilder: (context) {
-            return Icon(Icons.clear, color: AppColors.black, size: 14);
-          },
-          popupItemBuilder: (context, item, isSelected) {
-            return Container(
-              decoration: BoxDecoration(
-                border: Border(
-                  bottom: BorderSide(color: AppColors.border, width: 0.5),
-                ),
-                color: item == currentSelectedOption
-                    ? AppColors.primary.withValues(alpha: 0.1)
-                    : Colors.white,
-              ),
-              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 12),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      item.label,
-                      style: TextStyle(
-                        color: AppColors.black,
-                        fontWeight: item == currentSelectedOption
-                            ? FontWeight.w500
-                            : FontWeight.w400,
-                        fontSize: 15.sp,
-                      ),
-                    ),
+          decoratorProps: DropDownDecoratorProps(
+            decoration:
+                AppStyles.textInputDecoration(
+                  hintText: widget.lableText ?? '',
+                  suffix: null,
+                  prefix: null,
+                ).copyWith(
+                  contentPadding: const EdgeInsets.symmetric(
+                    horizontal: 15,
+                    vertical: 12,
                   ),
-                  if (item == currentSelectedOption)
-                    Icon(Icons.check, color: AppColors.primary, size: 18),
-                ],
-              ),
-            );
-          },
-          dropdownButtonBuilder: (context) =>
-              Icon(Icons.expand_more, color: AppColors.primary),
-          dropdownSearchDecoration:
-              AppStyles.textInputDecoration(
-                hintText: widget.lableText ?? '',
-                suffix: null,
-                prefix: null,
-              ).copyWith(
+                  border: InputBorder.none,
+                  filled: widget.isReadOnly,
+                  fillColor: widget.isReadOnly ? Colors.grey.shade100 : null,
+                ),
+          ),
+          suffixProps: DropdownSuffixProps(
+            clearButtonProps: ClearButtonProps(
+              isVisible: widget.showClearButton,
+              icon: Icon(Icons.clear, color: AppColors.black, size: 14),
+            ),
+            dropdownButtonProps: DropdownButtonProps(
+              iconClosed: Icon(Icons.expand_more, color: AppColors.primary),
+            ),
+          ),
+          popupProps: PopupProps.menu(
+            showSearchBox: true,
+            searchFieldProps: TextFieldProps(
+              style: TextStyle(color: AppColors.black, fontSize: 15.sp),
+              decoration: InputDecoration(
+                isDense: true,
+                hintText: 'Search',
+                prefixIcon: Icon(
+                  Icons.search,
+                  color: AppColors.black.withValues(alpha: 0.6),
+                  size: 20,
+                ),
+                hintStyle: TextStyle(
+                  color: AppColors.black.withValues(alpha: 0.6),
+                  fontSize: 15.sp,
+                ),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: BorderSide(color: AppColors.border, width: 0.5),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: BorderSide(color: AppColors.border, width: 0.5),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: BorderSide(color: AppColors.primary, width: 1),
+                ),
+                errorBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: BorderSide(color: Colors.red, width: 0.5),
+                ),
                 contentPadding: const EdgeInsets.symmetric(
                   horizontal: 15,
                   vertical: 12,
                 ),
-                border: InputBorder.none,
-              ),
-          searchFieldProps: TextFieldProps(
-            style: TextStyle(color: AppColors.black, fontSize: 15.sp),
-            decoration: InputDecoration(
-              isDense: true,
-              hintText: lang('Search'),
-              prefixIcon: Icon(
-                Icons.search,
-                color: AppColors.black.withValues(alpha: 0.6),
-                size: 20,
-              ),
-              hintStyle: TextStyle(
-                color: AppColors.black.withValues(alpha: 0.6),
-                fontSize: 15.sp,
-              ),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10),
-                borderSide: BorderSide(color: AppColors.border, width: 0.5),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10),
-                borderSide: BorderSide(color: AppColors.border, width: 0.5),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10),
-                borderSide: BorderSide(color: AppColors.primary, width: 1),
-              ),
-              errorBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10),
-                borderSide: BorderSide(color: Colors.red, width: 0.5),
-              ),
-              contentPadding: const EdgeInsets.symmetric(
-                horizontal: 15,
-                vertical: 12,
               ),
             ),
+            itemBuilder: (context, item, isDisabled, isSelected) {
+              return Container(
+                decoration: BoxDecoration(
+                  border: Border(
+                    bottom: BorderSide(color: AppColors.border, width: 0.5),
+                  ),
+                  color: item == currentSelectedOption
+                      ? AppColors.primary.withValues(alpha: 0.1)
+                      : Colors.white,
+                ),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 15,
+                  vertical: 12,
+                ),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        item.label,
+                        style: TextStyle(
+                          color: AppColors.black,
+                          fontWeight: item == currentSelectedOption
+                              ? FontWeight.w500
+                              : FontWeight.w400,
+                          fontSize: 15.sp,
+                        ),
+                      ),
+                    ),
+                    if (item == currentSelectedOption)
+                      Icon(Icons.check, color: AppColors.primary, size: 18),
+                  ],
+                ),
+              );
+            },
           ),
-          mode: Mode.MENU,
-          showSearchBox: true,
-          items: options,
-          onChanged: (DropdownOption? selectedOption) {
+          onSelected: (DropdownOption? selectedOption) {
             if (selectedOption != null) {
               field.didChange(selectedOption.value);
               widget.controller?.text = selectedOption.value;
               if (widget.onChange != null) {
                 widget.onChange!(selectedOption.value);
               }
-
               if (widget.onChangeIndex != null) {
                 int index = options.indexOf(selectedOption);
                 widget.onChangeIndex!(index);
               }
             }
           },
-          selectedItem: currentSelectedOption,
         );
       },
     );
@@ -327,7 +340,6 @@ class _TextboxWidgetDropdownState extends State<TextboxWidgetDropdown> {
           },
       ]),
       builder: (FormFieldState<List<String>?> field) {
-        // Find selected options based on current values
         List<DropdownOption> currentSelectedOptions = [];
         if (field.value != null && field.value!.isNotEmpty) {
           currentSelectedOptions = options
@@ -336,100 +348,9 @@ class _TextboxWidgetDropdownState extends State<TextboxWidgetDropdown> {
         }
 
         return DropdownSearch<DropdownOption>.multiSelection(
-          items: options,
+          items: (filter, _) => options,
           selectedItems: currentSelectedOptions,
-          showSearchBox: true,
-          showClearButton: widget.showClearButton,
-          clearButtonBuilder: (context) {
-            return Icon(Icons.clear, color: AppColors.black, size: 14);
-          },
-          dropdownButtonBuilder: (context) =>
-              Icon(Icons.expand_more, color: AppColors.primary),
-          popupItemBuilder: (context, item, isSelected) {
-            return Container(
-              decoration: BoxDecoration(
-                border: Border(
-                  bottom: BorderSide(color: AppColors.border, width: 0.5),
-                ),
-                color: isSelected
-                    ? AppColors.primary.withValues(alpha: 0.1)
-                    : Colors.white,
-              ),
-              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 12),
-              child: Row(
-                children: [
-                  Container(
-                    width: 20,
-                    height: 20,
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: isSelected
-                            ? AppColors.primary
-                            : Colors.grey.shade400,
-                        width: 2,
-                      ),
-                      borderRadius: BorderRadius.circular(4),
-                      color: isSelected
-                          ? AppColors.primary
-                          : Colors.transparent,
-                    ),
-                    child: isSelected
-                        ? Icon(Icons.check, color: Colors.white, size: 14)
-                        : null,
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Text(
-                      item.label,
-                      style: TextStyle(
-                        color: AppColors.black,
-                        fontWeight: isSelected
-                            ? FontWeight.w500
-                            : FontWeight.w400,
-                        fontSize: 15.sp,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            );
-          },
-          searchFieldProps: TextFieldProps(
-            style: TextStyle(color: AppColors.black, fontSize: 15.sp),
-            decoration: InputDecoration(
-              isDense: true,
-              hintText: lang('Search'),
-              prefixIcon: Icon(
-                Icons.search,
-                color: AppColors.black.withValues(alpha: 0.6),
-                size: 20,
-              ),
-              hintStyle: TextStyle(
-                color: AppColors.black.withValues(alpha: 0.6),
-                fontSize: 15.sp,
-              ),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10),
-                borderSide: BorderSide(color: AppColors.border, width: 0.5),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10),
-                borderSide: BorderSide(color: AppColors.border, width: 0.5),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10),
-                borderSide: BorderSide(color: AppColors.primary, width: 1),
-              ),
-              errorBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10),
-                borderSide: BorderSide(color: Colors.red, width: 0.5),
-              ),
-              contentPadding: const EdgeInsets.symmetric(
-                horizontal: 15,
-                vertical: 12,
-              ),
-            ),
-          ),
+          enabled: !widget.isReadOnly,
           dropdownBuilder: (context, selectedItems) {
             if (selectedItems.isEmpty) {
               return Text(
@@ -493,41 +414,126 @@ class _TextboxWidgetDropdownState extends State<TextboxWidgetDropdown> {
                     ),
                   );
                 }),
-                // if (selectedItems.length > 2)
-                //   Container(
-                //     padding: const EdgeInsets.symmetric(
-                //       horizontal: 8,
-                //       vertical: 4,
-                //     ),
-                //     decoration: BoxDecoration(
-                //       color: Colors.grey.shade200,
-                //       borderRadius: BorderRadius.circular(12),
-                //     ),
-                //     child: Text(
-                //       '+${selectedItems.length - 2} more',
-                //       style: TextStyle(
-                //         color: Colors.grey.shade600,
-                //         fontSize: 12.sp,
-                //         fontWeight: FontWeight.w500,
-                //       ),
-                //     ),
-                //   ),
               ],
             );
           },
-          dropdownSearchDecoration:
-              AppStyles.textInputDecoration(
-                hintText: widget.lableText ?? '',
-                suffix: null,
-                prefix: null,
-              ).copyWith(
+          decoratorProps: DropDownDecoratorProps(
+            decoration:
+                AppStyles.textInputDecoration(
+                  hintText: widget.lableText ?? '',
+                  suffix: null,
+                  prefix: null,
+                ).copyWith(
+                  contentPadding: const EdgeInsets.symmetric(
+                    horizontal: 15,
+                    vertical: 12,
+                  ),
+                  border: InputBorder.none,
+                  filled: widget.isReadOnly,
+                  fillColor: widget.isReadOnly ? Colors.grey.shade100 : null,
+                ),
+          ),
+          suffixProps: DropdownSuffixProps(
+            clearButtonProps: ClearButtonProps(
+              isVisible: widget.showClearButton,
+              icon: Icon(Icons.clear, color: AppColors.black, size: 14),
+            ),
+            dropdownButtonProps: DropdownButtonProps(
+              iconClosed: Icon(Icons.expand_more, color: AppColors.primary),
+            ),
+          ),
+          popupProps: MultiSelectionPopupProps.menu(
+            showSearchBox: true,
+            searchFieldProps: TextFieldProps(
+              style: TextStyle(color: AppColors.black, fontSize: 15.sp),
+              decoration: InputDecoration(
+                isDense: true,
+                hintText: 'Search',
+                prefixIcon: Icon(
+                  Icons.search,
+                  color: AppColors.black.withValues(alpha: 0.6),
+                  size: 20,
+                ),
+                hintStyle: TextStyle(
+                  color: AppColors.black.withValues(alpha: 0.6),
+                  fontSize: 15.sp,
+                ),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: BorderSide(color: AppColors.border, width: 0.5),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: BorderSide(color: AppColors.border, width: 0.5),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: BorderSide(color: AppColors.primary, width: 1),
+                ),
+                errorBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: BorderSide(color: Colors.red, width: 0.5),
+                ),
                 contentPadding: const EdgeInsets.symmetric(
                   horizontal: 15,
                   vertical: 12,
                 ),
-                border: InputBorder.none,
               ),
-          onChanged: (List<DropdownOption> selectedOptions) {
+            ),
+            itemBuilder: (context, item, isDisabled, isSelected) {
+              return Container(
+                decoration: BoxDecoration(
+                  border: Border(
+                    bottom: BorderSide(color: AppColors.border, width: 0.5),
+                  ),
+                  color: isSelected
+                      ? AppColors.primary.withValues(alpha: 0.1)
+                      : Colors.white,
+                ),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 15,
+                  vertical: 12,
+                ),
+                child: Row(
+                  children: [
+                    Container(
+                      width: 20,
+                      height: 20,
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: isSelected
+                              ? AppColors.primary
+                              : Colors.grey.shade400,
+                          width: 2,
+                        ),
+                        borderRadius: BorderRadius.circular(4),
+                        color: isSelected
+                            ? AppColors.primary
+                            : Colors.transparent,
+                      ),
+                      child: isSelected
+                          ? Icon(Icons.check, color: Colors.white, size: 14)
+                          : null,
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Text(
+                        item.label,
+                        style: TextStyle(
+                          color: AppColors.black,
+                          fontWeight: isSelected
+                              ? FontWeight.w500
+                              : FontWeight.w400,
+                          fontSize: 15.sp,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+          onSelected: (List<DropdownOption> selectedOptions) {
             List<String> values = selectedOptions
                 .map((option) => option.value)
                 .toList();

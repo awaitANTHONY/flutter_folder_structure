@@ -9,20 +9,7 @@ import '/controllers/setting_controller.dart';
 
 SettingController settingController = Get.find();
 
-extension SpaceXY on num {
-  SizedBox get spaceX => SizedBox(width: toDouble());
-  SizedBox get spaceY => SizedBox(height: toDouble());
-}
-
-extension ColorEx on Color {
-  Color withOpacity2(double opacity) => withValues(alpha: opacity);
-}
-
-extension EdgeInsetsTBXY on num {
-  EdgeInsets get edgeT => EdgeInsets.only(top: toDouble());
-  EdgeInsets get edgeB => EdgeInsets.only(bottom: toDouble());
-  EdgeInsets get edgeL => EdgeInsets.only(left: toDouble());
-  EdgeInsets get edgeR => EdgeInsets.only(right: toDouble());
-  EdgeInsets get edgeX => EdgeInsets.symmetric(horizontal: toDouble());
-  EdgeInsets get edgeY => EdgeInsets.symmetric(vertical: toDouble());
+bool isTablet([BuildContext? context]) {
+  var shortestSide = MediaQuery.of(context ?? Get.context!).size.shortestSide;
+  return shortestSide >= 600;
 }

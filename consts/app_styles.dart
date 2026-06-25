@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'consts.dart';
 
 class AppStyles {
@@ -53,9 +52,10 @@ class AppStyles {
       prefix: prefix,
       fillColor: isEnabled ? Colors.white : Colors.grey[100],
       filled: true,
-      suffix: suffix,
+      suffixIcon: suffix,
       floatingLabelBehavior: FloatingLabelBehavior.always,
-      isDense: true,
+      // isDense: true,
+      counterText: '',
       contentPadding: const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(10),
@@ -201,7 +201,7 @@ class AppStyles {
       hintText: hintText,
       isDense: true,
       hintStyle: TextStyle(color: AppColors.black, fontSize: 14.sp),
-      fillColor: Colors.grey.withOpacity2(0.2),
+      fillColor: Colors.grey.withValues(alpha: 0.2),
       filled: true,
       contentPadding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
       focusedBorder: OutlineInputBorder(
@@ -227,7 +227,7 @@ class AppStyles {
     return BoxDecoration(
       boxShadow: [
         BoxShadow(
-          color: Colors.black.withOpacity2(0.1),
+          color: Colors.black.withValues(alpha: 0.1),
           blurRadius: 20,
           offset: const Offset(0, 5),
         ),

@@ -70,7 +70,7 @@ class _SwitchWidgetState extends State<SwitchWidget> {
             Container(
               alignment: Alignment.topLeft,
               child: SizedBox(
-                width: 40.w,
+                width: widget.width,
                 height: 20.w,
                 child: Transform.scale(
                   scale: widget.scale,

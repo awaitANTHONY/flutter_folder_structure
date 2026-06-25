@@ -1,12 +1,10 @@
-import 'package:findatable/consts/consts.dart';
+import '/consts/consts.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:gradient_borders/gradient_borders.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 
-permissionDialog({
+void permissionDialog({
   required Permission permission,
   required Null Function() callback,
 }) {
@@ -40,10 +38,7 @@ permissionDialog({
         color: AppColors.transparent,
         splashColor: Colors.transparent,
         onPressed: () => Get.back(),
-        border: Border.all(
-          color: AppColors.primary,
-          width: 1.2,
-        ),
+        border: Border.all(color: AppColors.primary, width: 1.2),
         radius: BorderRadius.circular(20.sp),
         child: Text(
           "Cancel".tr,
