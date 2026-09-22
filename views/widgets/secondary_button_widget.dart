@@ -2,8 +2,8 @@ import '/consts/consts.dart';
 import 'package:flutter/material.dart';
 import 'package:gradient_borders/gradient_borders.dart';
 
-class SecondaryButtomWidget extends StatelessWidget {
-  const SecondaryButtomWidget({
+class SecondaryButtonWidget extends StatelessWidget {
+  const SecondaryButtonWidget({
     super.key,
     required this.text,
     required this.onTap,
