@@ -11,6 +11,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:delightful_toast/delight_toast.dart';
 import 'package:delightful_toast/toast/components/toast_card.dart';
 import 'package:delightful_toast/toast/utils/enums.dart';
+
 import '/consts/consts.dart';
 
 Future<void> launchURL(
@@ -161,9 +162,8 @@ Future<void> timePicker({
           ),
         ),
         child: MediaQuery(
-          data: MediaQuery.of(
-            context,
-          ).copyWith(alwaysUse24HourFormat: use24HourFormat),
+          data: MediaQuery.of(context)
+              .copyWith(alwaysUse24HourFormat: use24HourFormat),
           child: child!,
         ),
       );

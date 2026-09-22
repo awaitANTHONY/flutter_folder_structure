@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+
 import '/consts/consts.dart';
 
 class ParentScreen extends StatefulWidget {
-  const ParentScreen({
-    Key? key,
-    this.page = 0,
-  }) : super(key: key);
+  const ParentScreen({Key? key, this.page = 0}) : super(key: key);
   final int page;
 
   @override
@@ -38,9 +36,7 @@ class ParentScreenState extends State<ParentScreen> {
         backgroundColor: AppColors.background,
         title: Text(
           AppConsts.appName,
-          style: TextStyle(
-            fontFamily: GoogleFonts.carterOne().fontFamily,
-          ),
+          style: TextStyle(fontFamily: GoogleFonts.carterOne().fontFamily),
         ),
         centerTitle: true,
         systemOverlayStyle: SystemUiOverlayStyle(
@@ -50,10 +46,7 @@ class ParentScreenState extends State<ParentScreen> {
         ),
       ),
       backgroundColor: AppColors.background,
-      body: IndexedStack(
-        index: _selectedIndex,
-        children: const [],
-      ),
+      body: IndexedStack(index: _selectedIndex, children: const []),
     );
   }
 }

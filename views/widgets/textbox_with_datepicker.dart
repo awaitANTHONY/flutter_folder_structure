@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+
 import '/consts/consts.dart';
 
 class TextboxWidgetDatepicker extends StatefulWidget {
@@ -44,7 +45,8 @@ class _TextboxWidgetDatepickerState extends State<TextboxWidgetDatepicker> {
               onPrimary: Colors.white,
               surface: AppColors.primary,
               onSurface: AppColors.black,
-            ), dialogTheme: DialogThemeData(backgroundColor: Colors.white),
+            ),
+            dialogTheme: DialogThemeData(backgroundColor: Colors.white),
           ),
           child: child!,
         );

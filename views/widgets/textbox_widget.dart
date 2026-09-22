@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:flutter/services.dart';
+
 import '/consts/consts.dart';
 import '/utils/helpers.dart';
 
 class TextboxWidget extends StatefulWidget {
   const TextboxWidget({
     super.key,
-    required this.title,
+    this.title,
     this.fieldName,
     this.initialValue,
     this.keyboardType = TextInputType.name,
@@ -28,10 +29,14 @@ class TextboxWidget extends StatefulWidget {
     this.maxLength,
     this.maxLines = 1,
     this.minLines,
+    this.titleColor,
     this.onTap,
-  });
+  }) : assert(
+         title != null || fieldName != null || controller != null,
+         'When `title` is null, either `fieldName` or `controller` must be provided.',
+       );
 
-  final String title;
+  final String? title;
   final String? fieldName;
   final String? initialValue;
   final bool isPassword;
@@ -52,6 +57,7 @@ class TextboxWidget extends StatefulWidget {
   final int? maxLines;
   final int? minLines;
   final VoidCallback? onTap;
+  final Color? titleColor;
 
   @override
   State<TextboxWidget> createState() => _TextboxWidgetState();
@@ -72,35 +78,39 @@ class _TextboxWidgetState extends State<TextboxWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final fieldName = widget.fieldName ?? getFieldName(widget.title);
+    final fieldName =
+        widget.fieldName ??
+        (widget.title != null ? getFieldName(widget.title!) : '');
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        RichText(
-          text: TextSpan(
-            children: [
-              TextSpan(
-                text: lang(widget.title),
-                style: TextStyle(
-                  fontWeight: FontWeight.w400,
-                  fontSize: 16.sp,
-                  color: AppColors.black,
-                ),
-              ),
-              if (widget.isRequired)
+        if (widget.title != null) ...[
+          RichText(
+            text: TextSpan(
+              children: [
                 TextSpan(
-                  text: ' *',
-                  style: TextStyle(fontSize: 15.sp, color: Colors.red),
+                  text: lang(widget.title!),
+                  style: TextStyle(
+                    fontWeight: FontWeight.w400,
+                    fontSize: 16.sp,
+                    color: widget.titleColor ?? AppColors.black,
+                  ),
                 ),
-              // else
-              //   TextSpan(
-              //     text: ' (optional)',
-              //     style: TextStyle(fontSize: 15.sp, color: Colors.red),
-              //   ),
-            ],
+                if (widget.isRequired)
+                  TextSpan(
+                    text: ' *',
+                    style: TextStyle(fontSize: 15.sp, color: Colors.red),
+                  ),
+                // else
+                //   TextSpan(
+                //     text: ' (optional)',
+                //     style: TextStyle(fontSize: 15.sp, color: Colors.red),
+                //   ),
+              ],
+            ),
           ),
-        ),
-        10.verticalSpace,
+          10.verticalSpace,
+        ],
         Container(
           width: double.infinity,
           alignment: Alignment.center,
@@ -115,6 +125,7 @@ class _TextboxWidgetState extends State<TextboxWidget> {
             maxLength: widget.maxLength,
             maxLines: widget.maxLines ?? (widget.isPassword ? 1 : null),
             minLines: widget.minLines,
+
             inputFormatters: [
               if (widget.keyboardType == TextInputType.number)
                 FilteringTextInputFormatter.digitsOnly,
@@ -124,7 +135,6 @@ class _TextboxWidgetState extends State<TextboxWidget> {
               color: AppColors.black,
               fontWeight: FontWeight.w500,
               fontSize: 14.sp,
-              height: 1,
             ),
             decoration: AppStyles.textInputDecoration(
               lableText: widget.lableText,

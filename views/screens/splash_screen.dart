@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
 import '/consts/consts.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -25,20 +26,11 @@ class SplashScreenState extends State<SplashScreen> {
               flex: 9,
               child: Container(
                 alignment: Alignment.center,
-                child: Image.asset(
-                  'assets/images/splash.png',
-                  height: 180,
-                ),
+                child: Image.asset('assets/images/splash.png', height: 180),
               ),
             ),
-            Center(
-              child: CircularProgressIndicator(
-                color: AppColors.white,
-              ),
-            ),
-            const SizedBox(
-              height: 50,
-            ),
+            Center(child: CircularProgressIndicator(color: AppColors.white)),
+            const SizedBox(height: 50),
           ],
         ),
       ),

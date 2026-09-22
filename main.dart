@@ -1,4 +1,5 @@
 import '/consts/consts.dart';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -43,92 +44,113 @@ class _MainState extends State<Main> {
           : const Size(430, 920),
       useInheritedMediaQuery: true,
       rebuildFactor: (old, data) => RebuildFactors.size(old, data),
-      builder: (BuildContext context, __) {
+      builder: (BuildContext context, _) {
         return GetMaterialApp(
           title: AppConsts.appName,
           debugShowCheckedModeBanner: false,
           home: const App(),
-          theme: ThemeData(
-            colorScheme: const ColorScheme.light().copyWith(
-              surface: AppColors.background,
-              primary: AppColors.primary,
-            ),
-            highlightColor: Colors.transparent,
-            splashColor: Colors.transparent,
-            useMaterial3: true,
-            scaffoldBackgroundColor: AppColors.transparent,
-            cardColor: Colors.white,
-            appBarTheme: AppBarTheme(
-              backgroundColor: AppColors.primary,
-              surfaceTintColor: AppColors.primary,
-              elevation: 1,
-              iconTheme: IconThemeData(size: 20.sp, color: AppColors.white),
-              actionsIconTheme: IconThemeData(
-                size: 20.sp,
-                color: AppColors.white,
-              ),
-              shadowColor: Colors.black.withValues(alpha: .2),
-            ),
-            navigationBarTheme: NavigationBarThemeData(
-              elevation: 1,
-              backgroundColor: AppColors.background,
-              indicatorColor: AppColors.primary.withValues(alpha: 0.8),
-              labelTextStyle: WidgetStatePropertyAll(
-                TextStyle(color: AppColors.blackLess),
-              ),
-              iconTheme: WidgetStateProperty.resolveWith((states) {
-                if (states.contains(WidgetState.selected)) {
-                  return IconThemeData(color: Colors.white, size: 22.sp);
-                }
-                return IconThemeData(color: AppColors.blackLess, size: 22.sp);
-              }),
-            ),
-
-            bottomNavigationBarTheme: BottomNavigationBarThemeData(
-              backgroundColor: AppColors.background,
-              selectedItemColor: AppColors.primary,
-              unselectedItemColor: AppColors.blackLess,
-              selectedLabelStyle: AppStyles.semiBold.copyWith(fontSize: 12.sp),
-              unselectedLabelStyle: AppStyles.medium.copyWith(fontSize: 12.sp),
-              type: BottomNavigationBarType.fixed,
-              selectedIconTheme: IconThemeData(
-                size: 22.sp,
-                color: AppColors.primary,
-              ),
-              unselectedIconTheme: IconThemeData(
-                size: 20.sp,
-                color: AppColors.blackLess,
-              ),
-            ),
-
-            fontFamily: GoogleFonts.inter().fontFamily,
-            textTheme: TextTheme(
-              titleMedium: AppStyles.semiBold,
-              titleLarge: AppStyles.bold,
-              bodySmall: AppStyles.small,
-              bodyMedium: AppStyles.medium,
-              bodyLarge: AppStyles.large,
-
-              displaySmall: AppStyles.small.copyWith(
-                color: AppColors.whiteLess,
-              ),
-              displayMedium: AppStyles.medium.copyWith(
-                color: AppColors.whiteLess,
-              ),
-              displayLarge: AppStyles.large.copyWith(color: AppColors.white),
-            ),
-            floatingActionButtonTheme: FloatingActionButtonThemeData(
-              backgroundColor: AppColors.primary,
-              foregroundColor: Colors.white,
-            ),
-            iconTheme: IconThemeData(size: 20.sp, color: AppColors.white),
-          ),
+          theme: _buildAppTheme(),
+          darkTheme: _buildAppTheme(brightness: Brightness.dark),
           themeMode: ThemeMode.light,
           onInit: () {
             Get.put(SettingController(), permanent: true);
           },
         );
       },
+    );
+  }
+
+  ThemeData _buildAppTheme({Brightness brightness = Brightness.light}) {
+    final ColorScheme scheme =
+        ColorScheme.fromSeed(
+          seedColor: AppColors.primary,
+          brightness: brightness,
+        ).copyWith(
+          surface: AppColors.background,
+          primary: AppColors.primary,
+          secondary: AppColors.secondary,
+        );
+
+    final TextTheme baseTextTheme = brightness == Brightness.light
+        ? Typography.material2021(platform: TargetPlatform.android).black
+        : Typography.material2021(platform: TargetPlatform.android).white;
+
+    return ThemeData(
+      useMaterial3: true,
+      brightness: brightness,
+      colorScheme: scheme,
+      scaffoldBackgroundColor: AppColors.background,
+      highlightColor: Colors.transparent,
+      splashColor: Colors.transparent,
+
+      appBarTheme: AppBarTheme(
+        backgroundColor: AppColors.primary,
+        surfaceTintColor: AppColors.primary,
+        elevation: 1,
+        scrolledUnderElevation: 2,
+        iconTheme: IconThemeData(size: 20.sp, color: AppColors.white),
+        actionsIconTheme: IconThemeData(size: 20.sp, color: AppColors.white),
+        shadowColor: Colors.black.withValues(alpha: .2),
+      ),
+
+      navigationBarTheme: NavigationBarThemeData(
+        elevation: 1,
+        backgroundColor: AppColors.background,
+        indicatorColor: AppColors.primary.withValues(alpha: 0.8),
+        labelTextStyle: WidgetStatePropertyAll(
+          TextStyle(color: AppColors.blackLess),
+        ),
+        iconTheme: WidgetStateProperty.resolveWith((states) {
+          if (states.contains(WidgetState.selected)) {
+            return IconThemeData(color: Colors.white, size: 22.sp);
+          }
+          return IconThemeData(color: AppColors.blackLess, size: 22.sp);
+        }),
+      ),
+
+      bottomNavigationBarTheme: BottomNavigationBarThemeData(
+        backgroundColor: AppColors.background,
+        selectedItemColor: AppColors.primary,
+        unselectedItemColor: AppColors.blackLess,
+        selectedLabelStyle: AppStyles.semiBold.copyWith(fontSize: 12.sp),
+        unselectedLabelStyle: AppStyles.medium.copyWith(fontSize: 12.sp),
+        type: BottomNavigationBarType.fixed,
+        selectedIconTheme: IconThemeData(size: 22.sp, color: AppColors.primary),
+        unselectedIconTheme: IconThemeData(
+          size: 20.sp,
+          color: AppColors.blackLess,
+        ),
+      ),
+
+      cardTheme: CardThemeData(
+        color: Colors.white,
+        surfaceTintColor: Colors.white,
+        elevation: 0,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      ),
+
+      floatingActionButtonTheme: FloatingActionButtonThemeData(
+        backgroundColor: AppColors.primary,
+        foregroundColor: Colors.white,
+      ),
+
+      iconTheme: IconThemeData(size: 20.sp, color: AppColors.white),
+
+      fontFamily: GoogleFonts.inter().fontFamily,
+      textTheme: baseTextTheme.copyWith(
+        titleMedium: AppStyles.semiBold,
+        titleLarge: AppStyles.bold,
+        bodySmall: AppStyles.small,
+        bodyMedium: AppStyles.medium,
+        bodyLarge: AppStyles.large,
+        displaySmall: AppStyles.small.copyWith(color: AppColors.whiteLess),
+        displayMedium: AppStyles.medium.copyWith(color: AppColors.whiteLess),
+        displayLarge: AppStyles.large.copyWith(color: AppColors.white),
+
+        labelLarge: AppStyles.semiBold.copyWith(fontSize: 14.sp),
+        labelMedium: AppStyles.regular.copyWith(fontSize: 12.sp),
+        labelSmall: AppStyles.small.copyWith(fontSize: 11.sp),
+      ),
     );
   }
 }
@@ -149,6 +171,6 @@ class _AppState extends State<App> {
 
   @override
   Widget build(BuildContext context) {
-    return SplashScreen();
+    return const SplashScreen();
   }
 }

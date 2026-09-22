@@ -2,6 +2,7 @@ import 'package:get/get_utils/src/extensions/string_extensions.dart';
 
 import '/consts/consts.dart';
 import '/utils/helpers.dart';
+
 import 'package:flutter/material.dart';
 
 class StatusWidget extends StatelessWidget {

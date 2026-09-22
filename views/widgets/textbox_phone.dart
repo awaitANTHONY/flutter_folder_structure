@@ -3,12 +3,13 @@ import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:flutter/services.dart';
+
 import '/consts/consts.dart';
 
 class TextboxPhoneWidget extends StatefulWidget {
   const TextboxPhoneWidget({
     super.key,
-    required this.title,
+    this.title,
     this.fieldName,
     this.keyboardType = TextInputType.phone,
     this.hintText = '',
@@ -23,9 +24,12 @@ class TextboxPhoneWidget extends StatefulWidget {
     this.externalErrorText,
     this.onChanged,
     this.initialValue,
-  });
+  }) : assert(
+         title != null || fieldName != null || controller != null,
+         'When `title` is null, either `fieldName` or `controller` must be provided.',
+       );
 
-  final String title;
+  final String? title;
   final String? fieldName;
   final TextInputType keyboardType;
   final String lableText;
@@ -57,36 +61,39 @@ class _TextboxPhoneWidgetState extends State<TextboxPhoneWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final fieldName = widget.fieldName ?? getFieldName(widget.title);
+    final fieldName =
+        widget.fieldName ??
+        (widget.title != null ? getFieldName(widget.title!) : '');
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        RichText(
-          text: TextSpan(
-            children: [
-              TextSpan(
-                text: widget.title,
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16.sp,
-                  color: AppColors.black,
-                ),
-              ),
-              if (widget.isRequired)
+        if (widget.title != null)
+          RichText(
+            text: TextSpan(
+              children: [
                 TextSpan(
-                  text: ' *',
-                  style: TextStyle(fontSize: 15.sp, color: Colors.red),
-                )
-              else
-                TextSpan(
-                  text: ' (optional)',
-                  style: TextStyle(fontSize: 15.sp, color: Colors.red),
+                  text: widget.title!,
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16.sp,
+                    color: AppColors.black,
+                  ),
                 ),
-            ],
+                if (widget.isRequired)
+                  TextSpan(
+                    text: ' *',
+                    style: TextStyle(fontSize: 15.sp, color: Colors.red),
+                  )
+                else
+                  TextSpan(
+                    text: ' (optional)',
+                    style: TextStyle(fontSize: 15.sp, color: Colors.red),
+                  ),
+              ],
+            ),
           ),
-        ),
-        10.verticalSpace,
+        if (widget.title != null) 10.verticalSpace,
         Container(
           decoration: BoxDecoration(borderRadius: BorderRadius.circular(5)),
           child: FormBuilderField<String>(

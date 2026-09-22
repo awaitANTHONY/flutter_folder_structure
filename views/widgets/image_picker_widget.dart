@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:form_builder_image_picker/form_builder_image_picker.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
+
 import '/utils/helpers.dart';
 import '/consts/consts.dart';
 
 class ImagePickerWidget extends StatefulWidget {
   const ImagePickerWidget({
     super.key,
-    required this.title,
+    this.title,
     this.fieldName,
     this.isRequired = false,
     this.maxImages = 1,
@@ -28,9 +29,12 @@ class ImagePickerWidget extends StatefulWidget {
     this.maxWidth,
     this.maxHeight,
     this.imageQuality = 80,
-  });
+  }) : assert(
+         title != null || fieldName != null,
+         'Either `title` or `fieldName` must be provided.',
+       );
 
-  final String title;
+  final String? title;
   final String? fieldName;
   final bool isRequired;
   final int maxImages;
@@ -60,36 +64,39 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final fieldName = widget.fieldName ?? getFieldName(widget.title);
+    final fieldName =
+        widget.fieldName ??
+        (widget.title != null ? getFieldName(widget.title!) : '');
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        RichText(
-          text: TextSpan(
-            children: [
-              TextSpan(
-                text: lang(widget.title),
-                style: TextStyle(
-                  fontWeight: FontWeight.w400,
-                  fontSize: 16.sp,
-                  color: AppColors.black,
-                ),
-              ),
-              if (widget.isRequired)
+        if (widget.title != null)
+          RichText(
+            text: TextSpan(
+              children: [
                 TextSpan(
-                  text: ' *',
-                  style: TextStyle(fontSize: 15.sp, color: Colors.red),
-                )
-              else
-                TextSpan(
-                  text: ' (optional)',
-                  style: TextStyle(fontSize: 15.sp, color: Colors.grey[600]),
+                  text: lang(widget.title!),
+                  style: TextStyle(
+                    fontWeight: FontWeight.w400,
+                    fontSize: 16.sp,
+                    color: AppColors.black,
+                  ),
                 ),
-            ],
+                if (widget.isRequired)
+                  TextSpan(
+                    text: ' *',
+                    style: TextStyle(fontSize: 15.sp, color: Colors.red),
+                  )
+                else
+                  TextSpan(
+                    text: ' (optional)',
+                    style: TextStyle(fontSize: 15.sp, color: Colors.grey[600]),
+                  ),
+              ],
+            ),
           ),
-        ),
-        10.verticalSpace,
+        if (widget.title != null) 10.verticalSpace,
         FormBuilderImagePicker(
           placeholderWidget: Center(
             child: SizedBox(

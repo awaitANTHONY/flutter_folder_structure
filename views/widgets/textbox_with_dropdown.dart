@@ -2,34 +2,15 @@ import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
+
 import '/utils/helpers.dart';
 import '/consts/consts.dart';
-
-class DropdownOption {
-  final String value;
-  final String label;
-
-  const DropdownOption({required this.value, required this.label});
-
-  @override
-  String toString() => label;
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is DropdownOption &&
-          runtimeType == other.runtimeType &&
-          value == other.value;
-
-  @override
-  int get hashCode => value.hashCode;
-}
 
 class TextboxWidgetDropdown extends StatefulWidget {
   const TextboxWidgetDropdown({
     super.key,
     this.controller,
-    this.lableText,
+    this.labelText,
     this.title,
     this.items,
     this.options,
@@ -45,20 +26,22 @@ class TextboxWidgetDropdown extends StatefulWidget {
     this.initialValues,
     this.onMultiChange,
     this.isReadOnly = false,
+    this.popupMaxHeight,
+    this.showSearchInPopup = true,
   }) : assert(
          items != null || options != null,
          'Either items or options must be provided',
        );
 
   final TextEditingController? controller;
-  final String? lableText;
+  final String? labelText;
   final String? title;
   final List? items; // For backward compatibility - simple string list
   final List<DropdownOption>? options; // For key-value pairs
   final String? fieldName;
   final bool isRequired;
-  final Null Function(dynamic value)? onChange;
-  final Null Function(int value)? onChangeIndex;
+  final void Function(dynamic value)? onChange;
+  final void Function(int value)? onChangeIndex;
   final bool enableTranslate;
   final bool showClearButton;
   final String? Function(String?)? customValidator;
@@ -68,6 +51,8 @@ class TextboxWidgetDropdown extends StatefulWidget {
   final Function(List<String> values)?
   onMultiChange; // Callback for multi-select changes
   final bool isReadOnly; // Disable interaction when true
+  final double? popupMaxHeight;
+  final bool showSearchInPopup;
 
   @override
   State<TextboxWidgetDropdown> createState() => _TextboxWidgetDropdownState();
@@ -93,11 +78,12 @@ class _TextboxWidgetDropdownState extends State<TextboxWidgetDropdown> {
   void initState() {
     super.initState();
 
-    // Set initial value if provided and controller is not set
     if (widget.initialValue != null &&
         (widget.controller == null || widget.controller!.text.isEmpty)) {
       widget.controller?.text = widget.initialValue!;
     }
+
+    widget.controller?.addListener(_onControllerChanged);
 
     if (widget.controller != null &&
         widget.controller!.text.isNotEmpty &&
@@ -118,16 +104,35 @@ class _TextboxWidgetDropdownState extends State<TextboxWidgetDropdown> {
     }
   }
 
+  void _onControllerChanged() {
+    if (mounted) setState(() {});
+  }
+
+  @override
+  void didUpdateWidget(TextboxWidgetDropdown oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.controller != widget.controller) {
+      oldWidget.controller?.removeListener(_onControllerChanged);
+      widget.controller?.addListener(_onControllerChanged);
+    }
+  }
+
+  @override
+  void dispose() {
+    widget.controller?.removeListener(_onControllerChanged);
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final options = dropdownOptions;
-    var selectedItem = (widget.controller == null && widget.lableText == null)
+    var selectedItem = (widget.controller == null && widget.labelText == null)
         ? widget.initialValue
-        : widget.controller?.text ?? widget.lableText ?? widget.initialValue;
+        : widget.controller?.text ?? widget.labelText ?? widget.initialValue;
 
     final fieldName =
         widget.fieldName ??
-        (widget.lableText ?? '').toLowerCase().replaceAll(' ', '_');
+        (widget.labelText ?? '').toLowerCase().replaceAll(' ', '_');
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -195,11 +200,12 @@ class _TextboxWidgetDropdownState extends State<TextboxWidgetDropdown> {
         return DropdownSearch<DropdownOption>(
           items: (filter, _) => options,
           selectedItem: currentSelectedOption,
+          compareFn: (a, b) => a == b,
           enabled: !widget.isReadOnly,
           dropdownBuilder: (context, selectedOption) {
             final hasValue = selectedOption != null;
             return Text(
-              hasValue ? selectedOption.label : (widget.lableText ?? ''),
+              hasValue ? selectedOption.label : (widget.labelText ?? ''),
               style: TextStyle(
                 color: hasValue ? AppColors.black : Colors.grey[400],
                 fontWeight: hasValue ? FontWeight.w500 : FontWeight.w400,
@@ -210,7 +216,7 @@ class _TextboxWidgetDropdownState extends State<TextboxWidgetDropdown> {
           decoratorProps: DropDownDecoratorProps(
             decoration:
                 AppStyles.textInputDecoration(
-                  hintText: widget.lableText ?? '',
+                  hintText: widget.labelText ?? '',
                   suffix: null,
                   prefix: null,
                 ).copyWith(
@@ -233,7 +239,10 @@ class _TextboxWidgetDropdownState extends State<TextboxWidgetDropdown> {
             ),
           ),
           popupProps: PopupProps.menu(
-            showSearchBox: true,
+            constraints: widget.popupMaxHeight != null
+                ? BoxConstraints(maxHeight: widget.popupMaxHeight!)
+                : const BoxConstraints(maxHeight: 300),
+            showSearchBox: widget.showSearchInPopup,
             searchFieldProps: TextFieldProps(
               style: TextStyle(color: AppColors.black, fontSize: 15.sp),
               decoration: InputDecoration(
@@ -350,11 +359,12 @@ class _TextboxWidgetDropdownState extends State<TextboxWidgetDropdown> {
         return DropdownSearch<DropdownOption>.multiSelection(
           items: (filter, _) => options,
           selectedItems: currentSelectedOptions,
+          compareFn: (a, b) => a == b,
           enabled: !widget.isReadOnly,
           dropdownBuilder: (context, selectedItems) {
             if (selectedItems.isEmpty) {
               return Text(
-                widget.lableText ?? 'Select options',
+                widget.labelText ?? 'Select options',
                 style: TextStyle(
                   color: AppColors.black.withValues(alpha: 0.6),
                   fontWeight: FontWeight.w400,
@@ -420,7 +430,7 @@ class _TextboxWidgetDropdownState extends State<TextboxWidgetDropdown> {
           decoratorProps: DropDownDecoratorProps(
             decoration:
                 AppStyles.textInputDecoration(
-                  hintText: widget.lableText ?? '',
+                  hintText: widget.labelText ?? '',
                   suffix: null,
                   prefix: null,
                 ).copyWith(
@@ -546,4 +556,24 @@ class _TextboxWidgetDropdownState extends State<TextboxWidgetDropdown> {
       },
     );
   }
+}
+
+class DropdownOption {
+  final String value;
+  final String label;
+
+  const DropdownOption({required this.value, required this.label});
+
+  @override
+  String toString() => label;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is DropdownOption &&
+          runtimeType == other.runtimeType &&
+          value == other.value;
+
+  @override
+  int get hashCode => value.hashCode;
 }

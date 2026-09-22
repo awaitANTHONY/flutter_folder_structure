@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
+
 import '/utils/helpers.dart';
 import '/consts/consts.dart';
 
@@ -32,7 +33,10 @@ class TextboxWidgetAutocomplete<T> extends StatefulWidget {
     this.onChanged,
     this.enabled = true,
     this.readOnly = false,
-  });
+  }) : assert(
+         title != null || fieldName != null || controller != null,
+         'When `title` is null, either `fieldName` or `controller` must be provided.',
+       );
 
   final TextEditingController? controller;
   final String? initialValue;

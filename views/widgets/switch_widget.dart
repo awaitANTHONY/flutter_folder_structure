@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+
 import '/consts/consts.dart';
 
 class SwitchWidget extends StatefulWidget {
   const SwitchWidget({
     super.key,
-    required this.title,
+    this.title,
     this.fieldName,
     this.description,
     this.initialValue = false,
@@ -15,9 +16,12 @@ class SwitchWidget extends StatefulWidget {
     this.activeColor,
     this.scale = 0.8,
     this.width = 40,
-  });
+  }) : assert(
+         title != null || fieldName != null,
+         'Either `title` or `fieldName` must be provided.',
+       );
 
-  final String title;
+  final String? title;
   final String? fieldName;
   final String? description;
   final bool initialValue;
@@ -39,32 +43,35 @@ class _SwitchWidgetState extends State<SwitchWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final fieldName = widget.fieldName ?? getFieldName(widget.title);
+    final fieldName =
+        widget.fieldName ??
+        (widget.title != null ? getFieldName(widget.title!) : '');
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // Title
-        RichText(
-          text: TextSpan(
-            children: [
-              TextSpan(
-                text: widget.title,
-                style: TextStyle(
-                  fontWeight: FontWeight.w400,
-                  fontSize: 16.sp,
-                  color: AppColors.black,
-                ),
-              ),
-              if (widget.isRequired)
+        if (widget.title != null)
+          RichText(
+            text: TextSpan(
+              children: [
                 TextSpan(
-                  text: ' *',
-                  style: TextStyle(fontSize: 14.sp, color: Colors.red),
+                  text: widget.title!,
+                  style: TextStyle(
+                    fontWeight: FontWeight.w400,
+                    fontSize: 16.sp,
+                    color: AppColors.black,
+                  ),
                 ),
-            ],
+                if (widget.isRequired)
+                  TextSpan(
+                    text: ' *',
+                    style: TextStyle(fontSize: 14.sp, color: Colors.red),
+                  ),
+              ],
+            ),
           ),
-        ),
-        10.verticalSpace,
+        if (widget.title != null) 10.verticalSpace,
         Row(
           children: [
             Container(

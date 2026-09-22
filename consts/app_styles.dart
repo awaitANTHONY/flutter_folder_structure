@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'consts.dart';
 
 class AppStyles {
@@ -45,11 +46,16 @@ class AppStyles {
       hintText: hintText,
       hintStyle: TextStyle(
         color: Colors.grey.withValues(alpha: 0.7),
-        fontSize: 15,
-        fontWeight: FontWeight.w300,
+        fontWeight: FontWeight.w500,
+        fontSize: 14.sp,
         height: 1,
       ),
-      prefix: prefix,
+      errorStyle: TextStyle(color: Colors.red, fontSize: 12.sp),
+      prefixIcon: prefix,
+      prefixIconConstraints: BoxConstraints(
+        minWidth: 45.sp,
+        // minHeight: 50.sp,
+      ),
       fillColor: isEnabled ? Colors.white : Colors.grey[100],
       filled: true,
       suffixIcon: suffix,
@@ -59,10 +65,7 @@ class AppStyles {
       contentPadding: const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(10),
-        borderSide: BorderSide(
-          color: Colors.grey.withValues(alpha: 0.5),
-          width: .5,
-        ),
+        borderSide: BorderSide(color: AppColors.primary, width: 1.2),
       ),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(10),
@@ -73,10 +76,7 @@ class AppStyles {
       ),
       errorBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(10),
-        borderSide: BorderSide(
-          color: Colors.grey.withValues(alpha: 0.5),
-          width: .5,
-        ),
+        borderSide: const BorderSide(color: Colors.red, width: 1),
       ),
       disabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(10),
@@ -87,10 +87,7 @@ class AppStyles {
       ),
       focusedErrorBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(10),
-        borderSide: BorderSide(
-          color: Colors.grey.withValues(alpha: 0.5),
-          width: .5,
-        ),
+        borderSide: const BorderSide(color: Colors.red, width: 1.2),
       ),
       errorText: errorText,
     );
